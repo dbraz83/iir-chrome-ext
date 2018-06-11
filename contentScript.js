@@ -64,12 +64,6 @@ function getCookie(cname){
 	return "";
 }
 
-
-/* 
-I changed the expired date to 1 day, because you wouldn't need the id for longer than that, now when it 
-expires the username disappears but it doesn't generate a new username, it remains blank
-*/
-
 function checkCookie() {
     var user = getCookie("username");
 	var expired = getCookie("exdays");
@@ -77,7 +71,7 @@ function checkCookie() {
     if (user.length === 8 && expired != null) {
         console.log("Welcome again " + user);
     } else {
-		// username is a random 6 string which lasts for 1 day - intitally was random but risks duplication, 
+		// username was a random 6 string which lasts for 1 day - intitally was random but risks duplication, 
 	    // instead opted for hashing the date, howevere creates an 8 digit string not 6
         //user = Math.random().toString(36).substr(2, 6);
 		user = (+new Date).toString(36);
@@ -92,8 +86,8 @@ function checkCookie() {
 // added this as the checkCookie function didn't seem to trigger
 checkCookie();
 
-var user = (+new Date).toString(36);
-console.log(document.cookie);
+//var user = (+new Date).toString(36);
+//console.log(document.cookie);
 
 // for testing purposes, and also to hard reset the cookie username
 //document.cookie = "username=Jasd; expires=Thu, 08 June 2018 18:27:00 UTC; path=/";
@@ -111,8 +105,6 @@ var x = document.cookie;
 console.log("doc cookie" + x);
 */
 
-//  cookie set as a session id. retrieve 'username' and return as 
-//document.cookie = "username=Jasd; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
 
 // use userid and link to the query and SERP results that are input and returned
 const userID = getCookie("username");
@@ -126,7 +118,6 @@ Reads the page for the query that was submit.
 finds all search results and creates an array of the URL's. 
 
 */
-/*
 // Are there any g class divs?
 if($(".g").length > 0) {
 
@@ -146,21 +137,24 @@ $( ".g" ).each( function( index, element ){
 });
 }
 
+/*
+Checks location of URL every 5 seconds, this will be reduced to every 1/2 second once live, this is in order to track user navigation
+*/
+
  window.onpopstate = function(event) {
   console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
 };
- /*window.onhashchange = function() { 
+ window.onhashchange = function() { 
     console.log("Currently URL is " + window.location.href);
  }
  setInterval(function(){ 
  
  console.log("Currently URL is " + window.location.href); }, 5000);
- */
-
+ 
  // SERP link click log
 // listens for SERP link click
 // AIM IS TO COMPARE AGAINST All SERP links in array (above) to get SERP rank
-/*
+
 function handleWindowClick(event) {
             var origEl = event.target;
             if(origEl.tagName == 'A') {
@@ -176,7 +170,7 @@ function handleWindowClick(event) {
 window.addEventListener('click', handleWindowClick, false);
 
 // tracks when URL hash changes, however not all URLS use hash....
-// how else to track URL changes?
+//see above for URL following
 
 /*
 function hashHandler(){
@@ -198,7 +192,7 @@ var hashDetection = new hashHandler();
 
 
 // tracking bookmarks
-// NOTHING HAPPENS ON THE CONSOLE OR FOR bookmark manager CONSOLE EITHER....
+// NOTHING HAPPENS ON THE CONSOLE OR FOR bookmark manager CONSOLE EITHER....likely not implemented correctly
 /*
 chrome.bookmarks.onCreated.addListener(function(id, bookmark) {
        console.log("Bookmark Created"); 
@@ -212,6 +206,7 @@ chrome.bookmarks.create({'parentId': bookmarkBar.id,
 	
 	
 	
+// attempt at creating link rank, logic flawed? Better to start from scratch?
 
 function qList (){
 let queryList, serpRank, i;
