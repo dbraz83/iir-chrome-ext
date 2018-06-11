@@ -64,26 +64,36 @@ function getCookie(cname){
 	return "";
 }
 
+
+/* 
+I changed the expired date to 1 day, because you wouldn't need the id for longer than that, now when it 
+expires the username disappears but it doesn't generate a new username, it remains blank
+*/
+
 function checkCookie() {
     var user = getCookie("username");
 	var expired = getCookie("exdays");
 	console.log("expiry is " + expired);
-    if (user.length === 6 || expired != null) {
+    if (user.length === 8 || expired != null) {
         console.log("Welcome again " + user);
     } else {
-		// username is a random 6 string which lasts for 1 day
+		// username is a random 6 string which lasts for 1 day - intitally was random but risks duplication, 
+	    // instead opted for hashing the date, howevere creates an 8 digit string not 6
         //user = Math.random().toString(36).substr(2, 6);
 		user = (+new Date).toString(36);
-        if (user.length === 6 && user != null) {
+        if (user.length === 8 && user != null) {
             setCookie("username", user, 1);
         }
     } 
 	
 }
+// added this as the checkCookie function didn't seem to trigger
 checkCookie();
-var user = user = (+new Date).toString(36);
+
+var user = (+new Date).toString(36);
 console.log(document.cookie);
 
+// for testing purposes, and also to hard reset the cookie username
 //document.cookie = "username=Jasd; expires=Thu, 08 June 2018 18:27:00 UTC; path=/";
 /*
 if (document.cookie.split(';').filter((item) => {
