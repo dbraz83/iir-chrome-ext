@@ -73,8 +73,8 @@ expires the username disappears but it doesn't generate a new username, it remai
 function checkCookie() {
     var user = getCookie("username");
 	var expired = getCookie("exdays");
-	console.log("expiry is " + expired);
-    if (user.length === 8 || expired != null) {
+	//console.log("expiry is " + expired);
+    if (user.length === 8 && expired != null) {
         console.log("Welcome again " + user);
     } else {
 		// username is a random 6 string which lasts for 1 day - intitally was random but risks duplication, 
@@ -87,6 +87,8 @@ function checkCookie() {
     } 
 	
 }
+
+
 // added this as the checkCookie function didn't seem to trigger
 checkCookie();
 
