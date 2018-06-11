@@ -1,0 +1,22 @@
+Must haves:
+---------------
+Log Search results link clicked
+Log Link Rank
+Search query submit
+UserID or Session ID to track over multiple tabs/windows/when browser is closed and reopened
+Track search no.
+Read/Write log to file
+	- compartmentalise for .csv?
+Total time spent on document session
+
+Would be nice:
+-------------
+Bookmark tracking
+Time spent on individual documents
+Time spent typing search query
+
+maybe:
+--------
+Set a timer with a popup
+Questionnaires ~ pre/post/study (demographics)
+Check use of assistance/autocorrect/recommended links when querying
