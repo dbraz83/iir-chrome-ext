@@ -73,8 +73,10 @@ function checkCookie() {
     } else {
 		// username was a random 6 string which lasts for 1 day - intitally was random but risks duplication, 
 	    // instead opted for hashing the date, howevere creates an 8 digit string not 6
-        //user = Math.random().toString(36).substr(2, 6);
-		user = (+new Date).toString(36);
+    var date = (+new Date).toString(36).slice(3,8);
+    var str = Math.random().toString(36).substr(2, 3); 
+   //var res = date.slice(3,8);
+   var user = str+date;
         if (user.length === 8 && user != null) {
             setCookie("username", user, 1);
         }
