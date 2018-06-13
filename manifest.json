@@ -3,17 +3,18 @@
   "version": "0.1",
   "manifest_version": 2,
   "description": "Just mucking about, really...",
-  "background": {
+  /*"background": {
 	"scripts": ["background.js"],
 	"persistent": false
   },
+  */
   "permissions": [
           "storage", "bookmarks","tabs", "cookies"
         ],
   "content_scripts": [
     {
       "matches": ["*://www.google.co.uk/search*", "*://www.google.com/search*"],
-      "js": ["jquery-1.11.1.js","contentScript.js","cookie.js"]
+      "js": ["jquery-1.11.1.js","contentScript.js"]
     }
   ]
   
