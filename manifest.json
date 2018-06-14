@@ -1,9 +1,12 @@
 {
-  "name": "Morgan's Test Chrome Extension",
-  "version": "0.1",
+  "name": "IIR Chrome Extension",
+  "version": "0.2",
   "manifest_version": 2,
-  "description": "Just mucking about, really...",
-  
+  "description": "Not just mucking about now, this thing is starting to resembling a chrome extension",
+  "background": {
+	"scripts": ["urlTracking.js"],
+	"persistent": false
+  },
   "permissions": [
           "storage", "bookmarks","tabs", "cookies"
         ],
