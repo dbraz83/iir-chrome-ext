@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // added this as the checkCookie function didn't seem to trigger
+
     checkCookie();
 
     // use userid and link to the query and SERP results that are input and returned
@@ -16,35 +16,40 @@ $(document).ready(function () {
     // Are there any g class divs?
     if ($(".g").length > 0) {
 
-        var searchResult = [];
-
-        // For each one, extract the link text if link and text are present.
-        $(".g").each(function () {
-            var link = $(this).find("h3.r").find("a").attr('href');
-            var text = $(this).find("h3.r").find("a").text();
-            if (link != null && text != null) {
-                searchResult.push(link + " | " + text);
-            }
-        });
-
         //Save array in local storage using search criteria as part of key. 
         //If local storage for search already exists add links to existing array
         var searchResultKey = 'searchArray-' + $("#lst-ib").val();
 
-        if (localStorage.getItem(searchResultKey) === null) {
-            localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
-        }
-        else {
-            var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
+        var searchResult = [];
+        var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
+        var rank = 1;
+        var page = $("#nav").find(".cur").text();
 
-            searchResult.forEach(function (item) {
-                if (existingSearchResult.indexOf(item) === -1) {
-                    existingSearchResult.push(item);
+        //If search already exists in local storage copy values to searchResult.
+        if (existingSearchResult != undefined) {
+            searchResult = existingSearchResult;            
+        }
+
+        //Loop through every link in page and add to array if not already present.
+        $(".g").each(function () {
+            var link = $(this).find("h3.r").find("a").attr('href');
+            var text = $(this).find("h3.r").find("a").text();
+
+            if (link != null && text != null && !isInArray(searchResult, link)) {
+
+                var item = {
+                    link: link,
+                    text: text,
+                    page: page,
+                    rank: rank,
+                    clicks: 0
                 }
-            });
+                searchResult.push(item);
+                rank++;
+            }
+        });
 
-            localStorage.setItem(searchResultKey, JSON.stringify(existingSearchResult));
-        }
+        localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
 
         //Call array from local storage and display in console for reference.
         console.log(JSON.parse(localStorage.getItem(searchResultKey)));
@@ -53,6 +58,15 @@ $(document).ready(function () {
     logCurrentUrl();
     window.addEventListener('click', handleWindowClick, { passive: true });
 });
+
+function isInArray(array, link) {
+    for (i = 0; i < array.length; i++) {
+        if (array[i].link === link) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // can localStorage be utilised?
 /*
