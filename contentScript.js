@@ -1,3 +1,6 @@
+var searchResultKey = 'searchArray-' + $("#lst-ib").val();
+var searchResult = [];
+
 $(document).ready(function () {
 
     checkCookie();
@@ -8,56 +11,64 @@ $(document).ready(function () {
     console.log("UserID is " + userID);
     console.log(userID + " QUERY: " + $("#lst-ib").val());
 
-    /*
-    Reads the page for the query that was submit.
-    finds all search results and creates an array of the URL's. 
-    */
-
     // Are there any g class divs?
     if ($(".g").length > 0) {
-
-        //Save array in local storage using search criteria as part of key. 
-        //If local storage for search already exists add links to existing array
-        var searchResultKey = 'searchArray-' + $("#lst-ib").val();
-
-        var searchResult = [];
-        var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
-        var rank = 1;
-        var page = $("#nav").find(".cur").text();
-
-        //If search already exists in local storage copy values to searchResult.
-        if (existingSearchResult != undefined) {
-            searchResult = existingSearchResult;            
-        }
-
-        //Loop through every link in page and add to array if not already present.
-        $(".g").each(function () {
-            var link = $(this).find("h3.r").find("a").attr('href');
-            var text = $(this).find("h3.r").find("a").text();
-
-            if (link != null && text != null && !isInArray(searchResult, link)) {
-
-                var item = {
-                    link: link,
-                    text: text,
-                    page: page,
-                    rank: rank,
-                    clicks: 0
-                }
-                searchResult.push(item);
-                rank++;
-            }
-        });
-
-        localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
-
-        //Call array from local storage and display in console for reference.
-        console.log(JSON.parse(localStorage.getItem(searchResultKey)));
+        createArray(false);
     }
 
     logCurrentUrl();
     window.addEventListener('click', handleWindowClick, { passive: true });
 });
+
+function createArray(includeAdverts) {
+    //Save array in local storage using search criteria as part of key. 
+    //If local storage for search already exists add links to existing array        
+    var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
+    var rank = 1;
+    var page = $("#nav").find(".cur").text();
+
+    //If search already exists in local storage copy values to searchResult.
+    if (existingSearchResult != undefined) {
+        searchResult = existingSearchResult;
+    }
+
+    //if we're including advert links then loop through all adverts and add to array if not already present.
+    if (includeAdverts) {
+        $(".ad_cclk").each(function () {
+            var link;
+            var text;
+
+            $(this).find("h3").find("a").each(function () {
+
+                if ($(this).text() != '') {      
+                    link = $(this).attr('href');
+                    text = $(this).text();
+                }
+            });
+
+            if (link != null && text != null && !isInArray(searchResult, link)) {
+                addToArray(link, text, page, rank);
+                rank++;
+            }
+        });
+    }
+
+    //Loop through every link in page and add to array if not already present.
+    $(".g").each(function () {
+        var link = $(this).find("h3.r").find("a").attr('href');
+        var text = $(this).find("h3.r").find("a").text();
+
+        if (link != null && text != null && !isInArray(searchResult, link)) {
+            addToArray(link, text, page, rank);
+            rank++;
+        }
+    });
+
+    localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
+
+    //Call array from local storage and display in console for reference.
+    console.log(JSON.parse(localStorage.getItem(searchResultKey)));
+}
 
 function isInArray(array, link) {
     for (i = 0; i < array.length; i++) {
@@ -66,6 +77,17 @@ function isInArray(array, link) {
         }
     }
     return false;
+}
+
+function addToArray(link, text, page, rank) {
+    var item = {
+        link: link,
+        text: text,
+        page: page,
+        rank: rank,
+        clicks: 0
+    }
+    searchResult.push(item);
 }
 
 // can localStorage be utilised?
