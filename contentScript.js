@@ -13,7 +13,7 @@ $(document).ready(function () {
 
     // Are there any g class divs?
     if ($(".g").length > 0) {
-        createArray(false);
+        createArray(true);
     }
 
     logCurrentUrl();
@@ -47,7 +47,7 @@ function createArray(includeAdverts) {
             });
 
             if (link != null && text != null && !isInArray(searchResult, link)) {
-                addToArray(link, text, page, rank);
+                addToArray(link, text, page, rank, true);
                 rank++;
             }
         });
@@ -59,7 +59,7 @@ function createArray(includeAdverts) {
         var text = $(this).find("h3.r").find("a").text();
 
         if (link != null && text != null && !isInArray(searchResult, link)) {
-            addToArray(link, text, page, rank);
+            addToArray(link, text, page, rank, false);
             rank++;
         }
     });
@@ -79,12 +79,13 @@ function isInArray(array, link) {
     return false;
 }
 
-function addToArray(link, text, page, rank) {
+function addToArray(link, text, page, rank, advert) {
     var item = {
         link: link,
         text: text,
         page: page,
         rank: rank,
+        advert: advert,
         clicks: 0
     }
     searchResult.push(item);
