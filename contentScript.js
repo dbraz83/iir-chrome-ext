@@ -1,3 +1,6 @@
+var searchResultKey = 'searchArray-' + $("#lst-ib").val();
+var searchResult = [];
+
 $(document).ready(function () {
 
     checkCookie();
@@ -8,14 +11,12 @@ $(document).ready(function () {
     console.log("UserID is " + userID);
     console.log(userID + " QUERY: " + $("#lst-ib").val());
 
-    /*
-    Reads the page for the query that was submit.
-    finds all search results and creates an array of the URL's. 
-    */
-
     // Are there any g class divs?
     if ($(".g").length > 0) {
+        createArray(true);
+    }
 
+<<<<<<< HEAD
         //Save array in local storage using search criteria as part of key. 
         //If local storage for search already exists add links to existing array
         var searchResultKey = 'searchArray-' + $("#lst-ib").val();
@@ -43,21 +44,89 @@ $(document).ready(function () {
                     page: page,
                     rank: rank,
                     clicks: 0
+=======
+    logCurrentUrl();
+    window.addEventListener('click', handleWindowClick, { passive: true });
+});
+
+function createArray(includeAdverts) {
+    //Save array in local storage using search criteria as part of key. 
+    //If local storage for search already exists add links to existing array        
+    var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
+    var rank = 1;
+    var page = $("#nav").find(".cur").text();
+
+    //If search already exists in local storage copy values to searchResult.
+    if (existingSearchResult != undefined) {
+        searchResult = existingSearchResult;
+    }
+
+    //if we're including advert links then loop through all adverts and add to array if not already present.
+    if (includeAdverts) {
+        $(".ad_cclk").each(function () {
+            var link;
+            var text;
+
+            $(this).find("h3").find("a").each(function () {
+
+                if ($(this).text() != '') {      
+                    link = $(this).attr('href');
+                    text = $(this).text();
+>>>>>>> 418890ce4472d81b191702251aa8c3138cb0b6c7
                 }
                 searchResult.push(item);
                 rank++;
             }
         });
 
+<<<<<<< HEAD
         localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
-
-        //Call array from local storage and display in console for reference.
-        console.log(JSON.parse(localStorage.getItem(searchResultKey)));
+=======
+            if (link != null && text != null && !isInArray(searchResult, link)) {
+                addToArray(link, text, page, rank, true);
+                rank++;
+            }
+        });
     }
 
-    logCurrentUrl();
-    window.addEventListener('click', handleWindowClick, { passive: true });
-});
+    //Loop through every link in page and add to array if not already present.
+    $(".g").each(function () {
+        var link = $(this).find("h3.r").find("a").attr('href');
+        var text = $(this).find("h3.r").find("a").text();
+
+        if (link != null && text != null && !isInArray(searchResult, link)) {
+            addToArray(link, text, page, rank, false);
+            rank++;
+        }
+    });
+
+    localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
+
+    //Call array from local storage and display in console for reference.
+    console.log(JSON.parse(localStorage.getItem(searchResultKey)));
+}
+>>>>>>> 418890ce4472d81b191702251aa8c3138cb0b6c7
+
+function isInArray(array, link) {
+    for (i = 0; i < array.length; i++) {
+        if (array[i].link === link) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function addToArray(link, text, page, rank, advert) {
+    var item = {
+        link: link,
+        text: text,
+        page: page,
+        rank: rank,
+        advert: advert,
+        clicks: 0
+    }
+    searchResult.push(item);
+}
 
 function isInArray(array, link) {
     for (i = 0; i < array.length; i++) {
