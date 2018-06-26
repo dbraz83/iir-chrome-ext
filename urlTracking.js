@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-chrome.runtime.onStartup.addListener(function(logCurrentUrl) { 
-=======
 chrome.runtime.onStartup.addListener(function(logCurrentUrl) { 
   
 function logCurrentUrl() {
@@ -22,4 +19,4 @@ function logCurrentUrl() {
     }, 1000);
 };
 });
->>>>>>> 418890ce4472d81b191702251aa8c3138cb0b6c7
+
