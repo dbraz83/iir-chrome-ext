@@ -16,7 +16,6 @@ $(document).ready(function () {
         createArray(true);
     }
 
-<<<<<<< HEAD
         //Save array in local storage using search criteria as part of key. 
         //If local storage for search already exists add links to existing array
         var searchResultKey = 'searchArray-' + $("#lst-ib").val();
@@ -44,7 +43,7 @@ $(document).ready(function () {
                     page: page,
                     rank: rank,
                     clicks: 0
-=======
+
     logCurrentUrl();
     window.addEventListener('click', handleWindowClick, { passive: true });
 });
@@ -72,16 +71,16 @@ function createArray(includeAdverts) {
                 if ($(this).text() != '') {      
                     link = $(this).attr('href');
                     text = $(this).text();
->>>>>>> 418890ce4472d81b191702251aa8c3138cb0b6c7
+
                 }
                 searchResult.push(item);
                 rank++;
             }
         });
 
-<<<<<<< HEAD
+
         localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
-=======
+
             if (link != null && text != null && !isInArray(searchResult, link)) {
                 addToArray(link, text, page, rank, true);
                 rank++;
@@ -105,7 +104,7 @@ function createArray(includeAdverts) {
     //Call array from local storage and display in console for reference.
     console.log(JSON.parse(localStorage.getItem(searchResultKey)));
 }
->>>>>>> 418890ce4472d81b191702251aa8c3138cb0b6c7
+
 
 function isInArray(array, link) {
     for (i = 0; i < array.length; i++) {
