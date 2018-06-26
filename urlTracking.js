@@ -1,9 +1,11 @@
-chrome.runtime.onStartup.addListener(function(logCurrentUrl) { 
-  
+$(document).ready(function () {
+    logCurrentUrl();
+});
+
 function logCurrentUrl() {
-  
-  console.log("I started up!");
-   // chrome.storage.local.set({"startedUp": true}); 
+
+    console.log("I started up!");
+    // chrome.storage.local.set({"startedUp": true}); 
     /*
     Checks location of URL every 5 seconds, this will be reduced to every 1/2 second once live, this is in order to track user navigation
     */
@@ -18,5 +20,3 @@ function logCurrentUrl() {
         console.log("Currently URL is " + window.location.href);
     }, 1000);
 };
-});
-

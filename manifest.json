@@ -4,18 +4,27 @@
   "manifest_version": 2,
   "description": "Not just mucking about now, this thing is starting to resembling a chrome extension",
   "background": {
-	"scripts": ["urlTracking.js"],
-	"persistent": false
+    "scripts": [
+      "jquery-1.11.1.js",
+      "urlTracking.js"
+    ]
   },
   "permissions": [
-          "storage", "bookmarks","tabs", "cookies"
-        ],
+    "storage",
+    "bookmarks",
+    "tabs",
+    "cookies"
+  ],
   "content_scripts": [
     {
-      "matches": ["*://www.google.co.uk/search*", "*://www.google.com/search*"],
-      "js": ["jquery-1.11.1.js","contentScript.js"]
+      "matches": [
+        "*://www.google.co.uk/search*",
+        "*://www.google.com/search*"
+      ],
+      "js": [
+        "jquery-1.11.1.js",
+        "contentScript.js"
+      ]
     }
   ]
-  
-   
 }
