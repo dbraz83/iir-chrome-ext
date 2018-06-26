@@ -16,34 +16,6 @@ $(document).ready(function () {
         createArray(true);
     }
 
-        //Save array in local storage using search criteria as part of key. 
-        //If local storage for search already exists add links to existing array
-        var searchResultKey = 'searchArray-' + $("#lst-ib").val();
-
-        var searchResult = [];
-        var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
-        var rank = 1;
-        var page = $("#nav").find(".cur").text();
-
-        //If search already exists in local storage copy values to searchResult.
-        if (existingSearchResult != undefined) {
-            searchResult = existingSearchResult;            
-        }
-
-        //Loop through every link in page and add to array if not already present.
-        $(".g").each(function () {
-            var link = $(this).find("h3.r").find("a").attr('href');
-            var text = $(this).find("h3.r").find("a").text();
-
-            if (link != null && text != null && !isInArray(searchResult, link)) {
-
-                var item = {
-                    link: link,
-                    text: text,
-                    page: page,
-                    rank: rank,
-                    clicks: 0
-
     logCurrentUrl();
     window.addEventListener('click', handleWindowClick, { passive: true });
 });
@@ -71,15 +43,8 @@ function createArray(includeAdverts) {
                 if ($(this).text() != '') {      
                     link = $(this).attr('href');
                     text = $(this).text();
-
                 }
-                searchResult.push(item);
-                rank++;
-            }
-        });
-
-
-        localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
+            });
 
             if (link != null && text != null && !isInArray(searchResult, link)) {
                 addToArray(link, text, page, rank, true);
@@ -105,7 +70,6 @@ function createArray(includeAdverts) {
     console.log(JSON.parse(localStorage.getItem(searchResultKey)));
 }
 
-
 function isInArray(array, link) {
     for (i = 0; i < array.length; i++) {
         if (array[i].link === link) {
@@ -126,56 +90,6 @@ function addToArray(link, text, page, rank, advert) {
     }
     searchResult.push(item);
 }
-
-function isInArray(array, link) {
-    for (i = 0; i < array.length; i++) {
-        if (array[i].link === link) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// can localStorage be utilised?
-/*
-function storageAvailable(type) {
-    try {
-        var storage = window[type],
-            x = '__storage_test__';
-        storage.setItem(x, x);
-        storage.removeItem(x);
-        return true;
-    }
-    catch(e) {
-        return e instanceof DOMException && (
-            // everything except Firefox
-            e.code === 22 ||
-            // Firefox
-            e.code === 1014 ||
-            // test name field too, because code might not be present
-            // everything except Firefox
-            e.name === 'QuotaExceededError' ||
-            // Firefox
-            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-            // acknowledge QuotaExceededError only if there's something already stored
-            storage.length !== 0;
-    }
-}
-console.log(storageAvailable('sessionStorage'));
-*/
-
-// make a random userID
-
-/*		
-chrome.storage.local.get('value', function(result) {
-          console.log('Username currently is ' + result);
-        });
-	*/
-//const userID = Math.random().toString(36).substr(2, 6);
-//console.log(userID);
-
-// set cookie as session ID. Allows for username to be used over multiple tabs 
-// courtesy of https://www.w3schools.com/js/js_cookies.asp
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -253,60 +167,4 @@ function handleWindowClick(event) {
         console.log("Span  is clicked");
     }
 }
-
-// tracks when URL hash changes, however not all URLS use hash....
-//see above for URL following
-
-/*
-function hashHandler(){
-    this.oldHash = window.location.hash;
-    this.Check;
-
-    var that = this;
-    var detect = function(){
-        if(that.oldHash!=window.location.hash){
-            console.log("URL is currently" + window.location.hash);
-            that.oldHash = window.location.hash;
-        }
-    };
-    this.Check = setInterval(function(){ detect() }, 1000);
-}
-
-var hashDetection = new hashHandler();
-*/
-
-
-// tracking bookmarks
-// NOTHING HAPPENS ON THE CONSOLE OR FOR bookmark manager CONSOLE EITHER....likely not implemented correctly
-/*
-chrome.bookmarks.onCreated.addListener(function(id, bookmark) {
-       console.log("Bookmark Created"); 
-    });
-	
-chrome.bookmarks.create({'parentId': bookmarkBar.id,
-                               'title': 'Study Bookmarks'},
-                              function(newFolder) {
-        console.log("added folder: " + newFolder.title);
-      });	
-	
-	
-	
-// attempt at creating link rank, logic flawed? Better to start from scratch?
-
-function qList (){
-let queryList, serpRank, i;
-var userID = getCookie("username");
-queryList = [];
-qLen = queryList.length;
-text = "<ol>";
-for (i = 0; i < qLen; i++) {
-    text += "<li>" + queryList[i] + "</li>";
-queryList.push($("#lst-ib").val());
-//console.log("UserID is " + userID);
-return queryList;
-console.log(userID + " QUERY: " + queryList );
-
-	}
-}
-*/
 
