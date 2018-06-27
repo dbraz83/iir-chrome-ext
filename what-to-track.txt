@@ -4,10 +4,16 @@ Must haves:
 (DONE) Log Link Rank
 (DONE) Search query submit
 (DONE) UserID or Session ID to track over multiple tabs/windows/when browser is closed and reopened
-(?) Track search no.
+(?) Track:
+	- search no.
+	- user navigation
+	- Total time spent on document session
+	
 Read/Write log to file
+	- create file
+	- check file exists
+	- append file on the fly?
 	- compartmentalise for .csv?
-Total time spent on document session
 
 Would be nice:
 -------------
