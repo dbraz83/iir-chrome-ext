@@ -1,5 +1,5 @@
-var searchResultKey = 'searchArray-' + $("#lst-ib").val();
-var searchResult = [];
+var searchText = $("#lst-ib").val();
+var searchResults = [];
 
 $(document).ready(function () {
 
@@ -9,7 +9,7 @@ $(document).ready(function () {
     const userID = getCookie("username");
 
     console.log("UserID is " + userID);
-    console.log(userID + " QUERY: " + $("#lst-ib").val());
+    console.log(userID + " QUERY: " + searchText);
 
     // Are there any g class divs?
     if ($(".g").length > 0) {
@@ -21,64 +21,70 @@ $(document).ready(function () {
 function createArray(includeAdverts) {
     //Save array in local storage using search criteria as part of key. 
     //If local storage for search already exists add links to existing array        
-    var existingSearchResult = JSON.parse(localStorage.getItem(searchResultKey));
-    var rank = 1;
-    var page = $("#nav").find(".cur").text();
+    chrome.storage.local.get('iir_searches', function (result) {
+        var existingSearchResults = result.iir_searches;
+        if (typeof existingSearchResults != 'undefined') {
+            searchResults = existingSearchResults;
+        }
 
-    //If search already exists in local storage copy values to searchResult.
-    if (existingSearchResult != undefined) {
-        searchResult = existingSearchResult;
-    }
+        var rank = 1;
+        var page = $("#nav").find(".cur").text();
 
-    //if we're including advert links then loop through all adverts and add to array if not already present.
-    if (includeAdverts) {
-        $(".ad_cclk").each(function () {
-            var link;
-            var text;
+        //if we're including advert links then loop through all adverts and add to array if not already present.
+        if (includeAdverts) {
+            $(".ad_cclk").each(function () {
+                var link;
+                var text;
 
-            $(this).find("h3").find("a").each(function () {
+                $(this).find("h3").find("a").each(function () {
 
-                if ($(this).text() != '') {      
-                    link = $(this).attr('href');
-                    text = $(this).text();
+                    if ($(this).text() != '') {
+                        link = $(this).attr('href');
+                        text = $(this).text();
+                    }
+                });
+
+                if (link != null && text != null && !isInArray(searchResults, link)) {
+                    addToArray(searchText, link, text, page, rank, true);
+                    rank++;
                 }
             });
+        }
 
-            if (link != null && text != null && !isInArray(searchResult, link)) {
-                addToArray(link, text, page, rank, true);
+        //Loop through every link in page and add to array if not already present.
+        $(".g").each(function () {
+            var link = $(this).find("h3.r").find("a").attr('href');
+            var text = $(this).find("h3.r").find("a").text();
+
+            if (link != null && text != null && !isInArray(searchResults, link)) {
+                addToArray(searchText, link, text, page, rank, false);
                 rank++;
             }
         });
-    }
 
-    //Loop through every link in page and add to array if not already present.
-    $(".g").each(function () {
-        var link = $(this).find("h3.r").find("a").attr('href');
-        var text = $(this).find("h3.r").find("a").text();
-
-        if (link != null && text != null && !isInArray(searchResult, link)) {
-            addToArray(link, text, page, rank, false);
-            rank++;
-        }
+        var obj = {};
+        obj['iir_searches'] = searchResults
+        chrome.storage.local.set(obj, function () {
+            //Call array from local storage and display in console for reference.
+            chrome.storage.local.get('iir_searches', function (result) {
+                console.log(result);
+            });
+        });
     });
-
-    localStorage.setItem(searchResultKey, JSON.stringify(searchResult));
-
-    //Call array from local storage and display in console for reference.
-    console.log(JSON.parse(localStorage.getItem(searchResultKey)));
 }
 
 function isInArray(array, link) {
     for (i = 0; i < array.length; i++) {
-        if (array[i].link === link) {
+        if (array[i].link === link && array[i].searchText === searchText) {
             return true;
         }
     }
     return false;
 }
 
-function addToArray(link, text, page, rank, advert) {
+function addToArray(searchText, link, text, page, rank, advert) {
     var item = {
+        searchText: searchText,
         link: link,
         text: text,
         page: page,
@@ -86,7 +92,7 @@ function addToArray(link, text, page, rank, advert) {
         advert: advert,
         clicks: 0
     }
-    searchResult.push(item);
+    searchResults.push(item);
 }
 
 function setCookie(cname, cvalue, exdays) {

@@ -1,22 +1,38 @@
+var urls = [];
+
 $(document).ready(function () {
-    logCurrentUrl();
+    logCurrentUrl(10);
 });
 
-function logCurrentUrl() {
+function logCurrentUrl(seconds) {
 
-    console.log("I started up!");
-    // chrome.storage.local.set({"startedUp": true}); 
-    /*
-    Checks location of URL every 5 seconds, this will be reduced to every 1/2 second once live, this is in order to track user navigation
-    */
-    window.onpopstate = function (event) {
-        console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-    };
-    window.onhashchange = function () {
-        console.log("The URL is " + window.location.href);
-    }
+    console.log("URL tracking activated.");
+
+    var milliseconds = seconds * 1000;
+
     setInterval(function () {
 
-        console.log("Currently URL is " + window.location.href);
-    }, 1000);
+        var urlLink = window.location.href;
+
+        chrome.storage.local.get('iir_urls', function (result) {
+            var existingUrls = result.iir_urls;
+            if (typeof existingUrls != 'undefined') {
+                urls = existingUrls;
+            }
+
+            var item = {
+                url: urlLink,
+                timeStamp: new Date().getTime()
+            }
+            urls.push(item);
+
+            var obj = {};
+            obj['iir_urls'] = urls
+            chrome.storage.local.set(obj, function () {
+                chrome.storage.local.get('iir_urls', function (result) {
+                    console.log(result);
+                });
+            });
+        });
+    }, milliseconds);
 };
