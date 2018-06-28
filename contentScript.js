@@ -142,16 +142,47 @@ function checkCookie() {
 
 // SERP link click log
 // listens for SERP link click
-// AIM IS TO COMPARE AGAINST All SERP links in array (above) to get SERP rank
+// Updates relevant link array with click
 function handleWindowClick(event) {
-    var origEl = event.target;
-    if (origEl.tagName == 'A') {
-        // do some things with event link: origEl.toString();
-        console.log("Event Link: " + origEl.toString());
-    } else if (origEl.parentNode.tagName == 'A') {
-        console.log("SERP click:" + origEl.parentNode.toString());
-    } else if (origEl.tagName == 'SPAN') {
-        console.log("Span  is clicked");
+
+    //obtain array relating to search
+    chrome.storage.local.get('iir_searches', function (result) {
+        var existingSearchResults = result.iir_searches;
+        if (typeof existingSearchResults != 'undefined') {
+            searchResults = existingSearchResults;
+        }
+
+        //assign link clicked to variable
+        var link = event.target;
+
+        //Check for valid link and update click numbers
+        if (link != null && link.tagName == 'A') {
+            if (FindInSearchResults(searchResults, link)) {
+
+                //save array and post back to console
+                var obj = {};
+                obj['iir_searches'] = searchResults
+                chrome.storage.local.set(obj, function () {
+                    //Call array from local storage and display in console for reference.
+                    chrome.storage.local.get('iir_searches', function (result) {
+                        console.log(result);
+                    });
+                });
+            }
+        }
+    });
+
+}
+
+//function to update clicks
+function FindInSearchResults(array, link) {
+    for (i = 0; i < array.length; i++) {
+        if (array[i].link.toString() === link.toString()) {
+            array[i].clicks += 1;
+
+            return true;
+        }
     }
+    return false;
 }
 
