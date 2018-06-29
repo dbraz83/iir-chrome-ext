@@ -5,6 +5,7 @@
   "description": "Not just mucking about now, this thing is starting to resembling a chrome extension",
   "background": {
     "scripts": [
+      "jquery-1.11.1.js",
       "background.js"
     ]
   },
@@ -24,15 +25,6 @@
       "js": [
         "jquery-1.11.1.js",
         "contentScript.js"
-      ]
-    },
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "jquery-1.11.1.js",
-        "urlTracking.js"
       ]
     }
   ]
