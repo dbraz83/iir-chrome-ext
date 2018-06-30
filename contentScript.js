@@ -1,5 +1,6 @@
 var searchText = $("#lst-ib").val();
 var searchResults = [];
+var clickResults = [];
 
 $(document).ready(function () {
 
@@ -146,36 +147,43 @@ function checkCookie() {
 function handleWindowClick(event) {
 
     //obtain array relating to search
-    chrome.storage.local.get('iir_searches', function (result) {
-        var existingSearchResults = result.iir_searches;
-        if (typeof existingSearchResults != 'undefined') {
-            searchResults = existingSearchResults;
+    chrome.storage.local.get('iir_clicks', function (result) {
+        var existingClickResults = result.iir_clicks;
+        if (typeof existingClickResults != 'undefined') {
+            clickResults = existingClickResults;
         }
+
+        
 
         //assign link clicked to variable
         var link = event.target;
 
         //Check for valid link and update click numbers
         if (link != null && link.tagName == 'A') {
-            if (FindInSearchResults(searchResults, link)) {
-
-                //save array and post back to console
-                var obj = {};
-                obj['iir_searches'] = searchResults
-                chrome.storage.local.set(obj, function () {
-                    //Call array from local storage and display in console for reference.
-                    chrome.storage.local.get('iir_searches', function (result) {
-                        console.log(result);
-                    });
-                });
+            
+            
+            if (!IsInClickResults(clickResults, link)) {
+                
+                //add to array and post array back to console
+                addToClickArray(link)
             }
         }
+
+        var obj = {};
+        obj['iir_clicks'] = clickResults
+        chrome.storage.local.set(obj, function () {
+            //Call array from local storage and display in console for reference.
+            chrome.storage.local.get('iir_clicks', function (result) {
+                console.log(result);
+            });
+        });
     });
 
 }
 
-//function to update clicks
-function FindInSearchResults(array, link) {
+//function to add clicks to array if it already exists in array
+function IsInClickResults(array, link) {
+  
     for (i = 0; i < array.length; i++) {
         if (array[i].link.toString() === link.toString()) {
             array[i].clicks += 1;
@@ -184,5 +192,15 @@ function FindInSearchResults(array, link) {
         }
     }
     return false;
+}
+
+function addToClickArray(link){
+    
+var item = {
+    link: link,
+    date: new Date().getTime(),
+    clicks: 1
+}
+clickResults.push(item);
 }
 
