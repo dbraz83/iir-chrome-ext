@@ -153,54 +153,33 @@ function handleWindowClick(event) {
             clickResults = existingClickResults;
         }
 
-        
-
         //assign link clicked to variable
         var link = event.target;
 
         //Check for valid link and update click numbers
-        if (link != null && link.tagName == 'A') {
-            
-            
-            if (!IsInClickResults(clickResults, link)) {
-                
-                //add to array and post array back to console
-                addToClickArray(link)
-            }
-        }
+        if (link.href != null && link.tagName == 'A') {
 
-        var obj = {};
-        obj['iir_clicks'] = clickResults
-        chrome.storage.local.set(obj, function () {
-            //Call array from local storage and display in console for reference.
-            chrome.storage.local.get('iir_clicks', function (result) {
-                console.log(result);
+            //add to array and post array back to console
+            addToClickArray(link.href)
+
+            var obj = {};
+            obj['iir_clicks'] = clickResults
+            chrome.storage.local.set(obj, function () {
+                //Call array from local storage and display in console for reference.
+                chrome.storage.local.get('iir_clicks', function (result) {
+                    console.log(result);
+                });
             });
-        });
+        }
     });
 
 }
 
-//function to add clicks to array if it already exists in array
-function IsInClickResults(array, link) {
-  
-    for (i = 0; i < array.length; i++) {
-        if (array[i].link.toString() === link.toString()) {
-            array[i].clicks += 1;
+function addToClickArray(link) {
 
-            return true;
-        }
+    var item = {
+        link: link,
+        date: new Date().getTime()
     }
-    return false;
+    clickResults.push(item);
 }
-
-function addToClickArray(link){
-    
-var item = {
-    link: link,
-    date: new Date().getTime(),
-    clicks: 1
-}
-clickResults.push(item);
-}
-
