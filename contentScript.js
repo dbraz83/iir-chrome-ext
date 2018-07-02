@@ -177,6 +177,7 @@ function handleWindowClick(event) {
 function addToClickArray(link) {
 
     var item = {
+        searchText: searchText,
         link: link,
         date: new Date().getTime()
     }
