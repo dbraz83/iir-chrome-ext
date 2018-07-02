@@ -90,8 +90,7 @@ function addToArray(searchText, link, text, page, rank, advert) {
         text: text,
         page: page,
         rank: rank,
-        advert: advert,
-        clicks: 0
+        advert: advert
     }
     searchResults.push(item);
 }
