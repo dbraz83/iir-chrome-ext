@@ -145,46 +145,58 @@ function download() {
                     }
 
                     var csvContent = "data:text/csv;charset=utf-8,";
+                    var userId = 'Unknown';
 
-                    const userID = getCookie("username");
-                    csvContent += "User Id: " + userID + "\r\n";
+                    chrome.cookies.get({ url: 'https://www.google.com', name: 'username' }, function (comCookie) {
+                        if (comCookie) {
+                            userId = comCookie.value;
+                        }
 
-                    csvContent += "Searches" + "\r\n";
-                    csvContent += "Search Text,Link,Text,Page,Rank,Advert" + "\r\n";
-                    finalSearches.forEach(function (item) {
-                        item.text = item.text.replace(/,/g, "");
-                        var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + "\r\n";
-                        csvContent += row;
+                        chrome.cookies.get({ url: 'https://www.google.co.uk', name: 'username' }, function (ukCookie) {
+                            if (ukCookie && !comCookie) {
+                                userId = ukCookie.value;
+                            }
+
+                            csvContent += "User Id: " + userId + "\r\n";
+
+                            csvContent += "Searches" + "\r\n";
+                            csvContent += "Search Text,Link,Text,Page,Rank,Advert" + "\r\n";
+                            finalSearches.forEach(function (item) {
+                                item.text = item.text.replace(/,/g, "");
+                                var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + "\r\n";
+                                csvContent += row;
+                            });
+
+                            csvContent += "Clicks" + "\r\n";
+                            csvContent += "Search Text,Link,TimeStamp" + "\r\n";
+                            finalClicks.forEach(function (item) {
+                                var row = item.searchText + ',' + item.link + ',' + item.date + "\r\n";
+                                csvContent += row;
+                            });
+
+                            csvContent += "Bookmarks" + "\r\n";
+                            csvContent += "Bookmark Id,Action,Url,TimeStamp" + "\r\n";
+                            finalBookmarks.forEach(function (item) {
+                                var row = item.bookmarkId + ',' + item.action + ',' + item.url + ',' + item.timeStamp + "\r\n";
+                                csvContent += row;
+                            });
+
+                            csvContent += "Urls" + "\r\n";
+                            csvContent += "Url,TimeStamp,Active" + "\r\n";
+                            finalUrls.forEach(function (item) {
+                                var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
+                                csvContent += row;
+                            });
+
+                            var encodedUri = encodeURI(csvContent);
+                            var link = document.createElement("a");
+                            link.setAttribute("href", encodedUri);
+                            link.setAttribute("download", "IIR_Chrome_Extension_Data.csv");
+                            link.innerHTML = "Click Here to download";
+                            document.body.appendChild(link);
+                            link.click();
+                        });
                     });
-
-                    csvContent += "Clicks" + "\r\n";
-                    csvContent += "Search Text,Link,TimeStamp" + "\r\n";
-                    finalClicks.forEach(function (item) {
-                        var row = item.searchText + ',' + item.link + ',' + item.date + "\r\n";
-                        csvContent += row;
-                    });
-
-                    csvContent += "Bookmarks" + "\r\n";
-                    csvContent += "Bookmark Id,Action,Url,TimeStamp" + "\r\n";
-                    finalBookmarks.forEach(function (item) {
-                        var row = item.bookmarkId + ',' + item.action + ',' + item.url + ',' + item.timeStamp + "\r\n";
-                        csvContent += row;
-                    });
-
-                    csvContent += "Urls" + "\r\n";
-                    csvContent += "Url,TimeStamp,Active" + "\r\n";
-                    finalUrls.forEach(function (item) {
-                        var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
-                        csvContent += row;
-                    });
-
-                    var encodedUri = encodeURI(csvContent);
-                    var link = document.createElement("a");
-                    link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", "IIR_Chrome_Extension_Data.csv");
-                    link.innerHTML = "Click Here to download";
-                    document.body.appendChild(link);
-                    link.click();
                 });
             });
         });

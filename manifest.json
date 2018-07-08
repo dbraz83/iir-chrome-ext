@@ -18,7 +18,9 @@
     "tabs",
     "cookies",
     "unlimitedStorage",
-    "contextMenus"
+    "contextMenus",
+    "*://*.google.com/*",
+    "*://*.google.co.uk/*"
   ],
   "content_scripts": [
     {
