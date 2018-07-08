@@ -183,3 +183,11 @@ function addToClickArray(link) {
     }
     clickResults.push(item);
 }
+
+function myAlert(){
+    alert('hello world');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('qlink').addEventListener('click', myAlert);
+});
