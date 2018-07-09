@@ -209,15 +209,9 @@ function download() {
     });
 };
 
-function startStudy() {
-    chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") });
-};
 
-chrome.contextMenus.create({
-    title: "Start Study",
-    contexts: ["browser_action"],
-    onclick: startStudy
-});
+
+
 
 chrome.contextMenus.create({
     title: "Download Data",
