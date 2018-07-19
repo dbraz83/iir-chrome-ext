@@ -1,0 +1,48 @@
+body{
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0 auto; 
+max-width: 80%; 
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+line-height:1.5;
+ background: #efefef;
+}
+
+h1 {
+	border-bottom: 5px solid black;
+   text-align:center;
+	background: #ffffff;
+}
+h2 {
+    text-decoration: underline;
+}
+
+h3 {
+    text-decoration: underline;
+}
+
+.welcome{
+	background: #ffffff;
+    padding: 1em;
+	border: 5px solid black;
+	padding: 10px 100px 100px 50px;
+}
+.button1 {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+	
+}
+.button1:hover {
+    background-color: #e7e7e7;
+    color: white;
+}
+
+legend {
+	background: #e7e7e7;
+}
