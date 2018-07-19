@@ -20,6 +20,17 @@ h2 {
 h3 {
     text-decoration: underline;
 }
+p.b{
+	
+    font-style: italic;
+	text-align: center;
+}
+
+p.a{
+	font-weight: bold;
+	margin: 0 auto;
+	
+}
 
 .welcome{
 	background: #ffffff;
@@ -45,4 +56,14 @@ h3 {
 
 legend {
 	background: #e7e7e7;
+}
+
+.container{
+}
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
 }
