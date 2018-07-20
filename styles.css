@@ -32,6 +32,12 @@ p.a{
 	
 }
 
+p.c{
+	font-weight: bold;
+	max-width:350px;
+	text-align: left;
+	
+}
 .welcome{
 	background: #ffffff;
     padding: 1em;
@@ -66,4 +72,17 @@ legend {
 }
 .container input:checked ~ .checkmark {
   background-color: #2196F3;
+}
+
+table{
+	text-align: center;
+}
+
+table.pre td {
+	
+	padding: 15px;
+}
+table.post td {
+	
+	padding: 15px 15px 0px 15px;
 }
