@@ -33,6 +33,16 @@
         "jquery-1.11.1.js",
         "contentScript.js"
       ]
+    },
+    {
+      "matches": [
+        "*://www.google.co.uk/*",
+        "*://www.google.com/*"
+      ],
+      "js": [
+        "jquery-1.11.1.js",
+        "queryTime.js"
+      ]
     }
   ]
 }

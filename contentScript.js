@@ -30,6 +30,7 @@ function createArray(includeAdverts) {
 
         var rank = 1;
         var page = $("#nav").find(".cur").text();
+        var timeStamp = new Date().getTime();
 
         //if we're including advert links then loop through all adverts and add to array if not already present.
         if (includeAdverts) {
@@ -46,7 +47,7 @@ function createArray(includeAdverts) {
                 });
 
                 if (link != null && text != null && !isInArray(searchResults, link)) {
-                    addToArray(searchText, link, text, page, rank, true);
+                    addToSearchArray(searchText, link, text, page, rank, true, timeStamp);
                     rank++;
                 }
             });
@@ -58,7 +59,7 @@ function createArray(includeAdverts) {
             var text = $(this).find("h3.r").find("a").text();
 
             if (link != null && text != null && !isInArray(searchResults, link)) {
-                addToArray(searchText, link, text, page, rank, false);
+                addToSearchArray(searchText, link, text, page, rank, false, timeStamp);
                 rank++;
             }
         });
@@ -83,14 +84,15 @@ function isInArray(array, link) {
     return false;
 }
 
-function addToArray(searchText, link, text, page, rank, advert) {
+function addToSearchArray(searchText, link, text, page, rank, advert, timeStamp) {
     var item = {
         searchText: searchText,
         link: link,
         text: text,
         page: page,
         rank: rank,
-        advert: advert
+        advert: advert,
+        timeStamp: timeStamp
     }
     searchResults.push(item);
 }
