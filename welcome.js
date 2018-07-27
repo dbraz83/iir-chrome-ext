@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //start study
 function startStudy(){
-    { chrome.tabs.update({ url: chrome.runtime.getURL("preStudy.html") });
+   // { chrome.tabs.update({ url: chrome.runtime.getURL("preStudy.html") });
 }
 //event listener for submitting consent and starting preStudy questionnaire
 document.addEventListener('DOMContentLoaded', function () {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 //start pre task
 function preTask(){
-    { chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+ //   { chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
 }
 //event listener for submitting preStudy questionnaire
 document.addEventListener('DOMContentLoaded', function () {
