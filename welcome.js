@@ -9,20 +9,28 @@ function showMenu(){
 
 //function to open the first question page
 function openQ(){
-    { chrome.tabs.update({ url: chrome.runtime.getURL("Q1.html") });
+    { chrome.tabs.update({ url: chrome.runtime.getURL("consentForm.html") });
 }}
 
 //event listener for click on view first question button
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('qlink').addEventListener('click', openQ);
 });
+
 //start study
 function startStudy(){
-    alert("Starting Study");
+    { chrome.tabs.update({ url: chrome.runtime.getURL("preStudy.html") });
 }
-//event listener for start study
+//event listener for submitting consent and starting preStudy questionnaire
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('testStart').addEventListener('click', startStudy);
 });
-
+//start pre task
+function preTask(){
+    { chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+}
+//event listener for submitting preStudy questionnaire
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('testStart').addEventListener('click', preTask);
+});
 
