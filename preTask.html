@@ -1,85 +1,118 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script language='javascript' src="welcome.js"></script>
-<title>Information Interaction of ESL user' Study</</title>
-    <style>
-       <!-- any CSS? -->
-	   
-	   
-    </style>
-	<link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
-<div class="welcome">
-<h1>Pre Task Questionnaire</h1>
-<!-- Name of the user is the username generated randomly-->
-<form>
-<div class="container">
-<fieldset>
-<label>Now that you have read the task, please answer these questions based on your knowledge, experience and understanding of the task descriptions.</label>
 
-<br><br>
-<table class="pre" align="center">
-<tr>
-<th></th>
-<th>(Not at all)</th>
-<th></th>
-<th></th>
-<th></th>
-<th>(Often)</th>
-</tr>
-<tr>
-<th></th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>5</th>
-</tr>
-<tr>
-<td><p class="a">I have searched about this topic before</p></td>
-  <td><input type="radio" name="exp" value="1"> 1</td>
-  <td><input type="radio" name="exp" value="2"> 2</td>
-  <td><input type="radio" name="exp" value="3"> 3</td>
-  <td><input type="radio" name="exp" value="4"> 4</td>
-  <td><input type="radio" name="exp" value="5"> 5</td>
- </tr>
- <tr>
-  <td><p class="a">I know about this topic</p></td>
-  <td><input type="radio" name="know" value="1">1</td>
-  <td><input type="radio" name="know" value="2">2</td>
-  <td><input type="radio" name="know" value="3">3</td>
-  <td><input type="radio" name="know" value="4">4</td>
-<td><input type="radio" name="know" value="5">5</td>
-</tr>
-<tr>
-<td><p class="a">I am interested in this topic</p></td>
-  <td><input type="radio" name="int" value="1">1</td>
-  <td><input type="radio" name="int" value="2">2</td>
-  <td><input type="radio" name="int" value="3">3</td>
-  <td><input type="radio" name="int" value="4">4</td>
-  <td><input type="radio" name="int" value="5">5</td>
- </tr>
- <tr>
-  <td><p class="a">It will be difficult to find information about this topic</p></td>
-  <td><input type="radio" name="diff" value="1">1</td>
-  <td><input type="radio" name="diff" value="2">2</td>
-  <td><input type="radio" name="diff" value="3">3</td>
-  <td><input type="radio" name="diff" value="4">4</td>
-<td><input type="radio" name="diff" value="5">5</td></td>
-  </tr>
-  </table>
-  <br><br>
+<head>
+  <script language='javascript' src="jquery-1.11.1.js"></script>
+  <script language='javascript' src="welcome.js"></script>
+  <title>Information Interaction of ESL user' Study</title>
+    <style></style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+  <div class="welcome">
+    <h1>Pre Task Questionnaire</h1>
+    <!-- Name of the user is the username generated randomly-->
+    <form>
+      <div class="container">
+        <fieldset>
+          <label>Now that you have read the task, please answer these questions based on your knowledge, experience and understanding
+            of the task descriptions.</label>
+
+          <br>
+          <br>
+          <table class="pre" align="center">
+            <tr>
+              <th></th>
+              <th>(Not at all)</th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>(Often)</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>1</th>
+              <th>2</th>
+              <th>3</th>
+              <th>4</th>
+              <th>5</th>
+            </tr>
+            <tr>
+              <td>
+                <p class="a">I have searched about this topic before</p>
+              </td>
+              <td>
+                <input type="radio" name="exp" value="1"> 1</td>
+              <td>
+                <input type="radio" name="exp" value="2"> 2</td>
+              <td>
+                <input type="radio" name="exp" value="3"> 3</td>
+              <td>
+                <input type="radio" name="exp" value="4"> 4</td>
+              <td>
+                <input type="radio" name="exp" value="5"> 5</td>
+            </tr>
+            <tr>
+              <td>
+                <p class="a">I know about this topic</p>
+              </td>
+              <td>
+                <input type="radio" name="know" value="1">1</td>
+              <td>
+                <input type="radio" name="know" value="2">2</td>
+              <td>
+                <input type="radio" name="know" value="3">3</td>
+              <td>
+                <input type="radio" name="know" value="4">4</td>
+              <td>
+                <input type="radio" name="know" value="5">5</td>
+            </tr>
+            <tr>
+              <td>
+                <p class="a">I am interested in this topic</p>
+              </td>
+              <td>
+                <input type="radio" name="int" value="1">1</td>
+              <td>
+                <input type="radio" name="int" value="2">2</td>
+              <td>
+                <input type="radio" name="int" value="3">3</td>
+              <td>
+                <input type="radio" name="int" value="4">4</td>
+              <td>
+                <input type="radio" name="int" value="5">5</td>
+            </tr>
+            <tr>
+              <td>
+                <p class="a">It will be difficult to find information about this topic</p>
+              </td>
+              <td>
+                <input type="radio" name="diff" value="1">1</td>
+              <td>
+                <input type="radio" name="diff" value="2">2</td>
+              <td>
+                <input type="radio" name="diff" value="3">3</td>
+              <td>
+                <input type="radio" name="diff" value="4">4</td>
+              <td>
+                <input type="radio" name="diff" value="5">5</td>
+              </td>
+            </tr>
+          </table>
+          <br>
+          <br>
+      </div>
+      <br>
+      <br>
+      <div class="next">
+        <form name='testForm'>
+          <p align="center">
+            <button class="button button1" input type="button" id="pre-study">Submit questionnaire</button>
+          </p>
+        </form>
+      </div>
   </div>
-  <br><br> 
-<div class="next">
-<form name='testForm'>
-<p align="center"  >
-<button class= "button button1" input type="button" id="pre-study">Submit questionnaire</button>
-</p>
-</form>
-</div>
-</div>
-</body> 
+</body>
+
 </html>

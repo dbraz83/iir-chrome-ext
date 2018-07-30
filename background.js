@@ -124,113 +124,139 @@ function download() {
     var finalBookmarks = [];
     var finalClicks = [];
     var finalQueryTimes = [];
+    var finalConsent = {};
+    var finalPreStudy = {};
 
-    chrome.storage.local.get('iir_urls', function (result) {
-        var existingUrls = result.iir_urls;
-        if (typeof existingUrls != 'undefined') {
-            finalUrls = existingUrls;
-        }
+    chrome.storage.local.get('iir_form_consent', function (result) {
+        finalConsent = result.iir_form_consent;
 
-        chrome.storage.local.get('iir_searches', function (result) {
-            var existingSearches = result.iir_searches;
-            if (typeof existingSearches != 'undefined') {
-                finalSearches = existingSearches;
-            }
+        chrome.storage.local.get('iir_form_prestudy', function (result) {
+            finalPreStudy = result.iir_form_prestudy;
 
-            chrome.storage.local.get('iir_bookmarks', function (result) {
-                var existingBookmarks = result.iir_bookmarks;
-                if (typeof existingBookmarks != 'undefined') {
-                    finalBookmarks = existingBookmarks;
+            chrome.storage.local.get('iir_urls', function (result) {
+                var existingUrls = result.iir_urls;
+                if (typeof existingUrls != 'undefined') {
+                    finalUrls = existingUrls;
                 }
 
-                chrome.storage.local.get('iir_clicks', function (result) {
-                    var existingClicks = result.iir_clicks;
-                    if (typeof existingClicks != 'undefined') {
-                        finalClicks = existingClicks;
+                chrome.storage.local.get('iir_urls', function (result) {
+                    var existingUrls = result.iir_urls;
+                    if (typeof existingUrls != 'undefined') {
+                        finalUrls = existingUrls;
                     }
 
-                    chrome.storage.local.get('iir_querytime', function (result) {
-                        var existingQueryTimes = result.iir_querytime;
-                        if (typeof existingQueryTimes != 'undefined') {
-                            finalQueryTimes = existingQueryTimes;
-                            finalQueryTimes.sort(sortByDate);
+                    chrome.storage.local.get('iir_searches', function (result) {
+                        var existingSearches = result.iir_searches;
+                        if (typeof existingSearches != 'undefined') {
+                            finalSearches = existingSearches;
                         }
 
-                        var csvContent = "data:text/csv;charset=utf-8,";
-                        var userId = 'Unknown';
-
-                        chrome.cookies.get({ url: 'https://www.google.com', name: 'username' }, function (comCookie) {
-                            if (comCookie) {
-                                userId = comCookie.value;
+                        chrome.storage.local.get('iir_bookmarks', function (result) {
+                            var existingBookmarks = result.iir_bookmarks;
+                            if (typeof existingBookmarks != 'undefined') {
+                                finalBookmarks = existingBookmarks;
                             }
 
-                            chrome.cookies.get({ url: 'https://www.google.co.uk', name: 'username' }, function (ukCookie) {
-                                if (ukCookie && !comCookie) {
-                                    userId = ukCookie.value;
+                            chrome.storage.local.get('iir_clicks', function (result) {
+                                var existingClicks = result.iir_clicks;
+                                if (typeof existingClicks != 'undefined') {
+                                    finalClicks = existingClicks;
                                 }
 
-                                csvContent += "User Id: " + userId + "\r\n";
-
-                                csvContent += "--Search Data--" + "\r\n";
-                                csvContent += "Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
-                                finalSearches.forEach(function (item) {
-
-                                    var queryTimeItem = finalQueryTimes.find(x => x.queryText == item.searchText && x.end <= item.timeStamp);
-                                    var queryTime = 'Unknown';
-                                    if (queryTimeItem != null) {
-                                        queryTime = queryTimeItem.end - queryTimeItem.start;
+                                chrome.storage.local.get('iir_querytime', function (result) {
+                                    var existingQueryTimes = result.iir_querytime;
+                                    if (typeof existingQueryTimes != 'undefined') {
+                                        finalQueryTimes = existingQueryTimes;
+                                        finalQueryTimes.sort(sortByDate);
                                     }
 
-                                    item.text = item.text.replace(/,/g, "");
-                                    item.searchText = item.searchText.replace(/,/g, "");
+                                    var csvContent = "data:text/csv;charset=utf-8,";
+                                    var userId = 'Unknown';
 
-                                    var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
-                                    csvContent += row;
+                                    chrome.cookies.get({ url: 'https://www.google.com', name: 'username' }, function (comCookie) {
+                                        if (comCookie) {
+                                            userId = comCookie.value;
+                                        }
+
+                                        chrome.cookies.get({ url: 'https://www.google.co.uk', name: 'username' }, function (ukCookie) {
+                                            if (ukCookie && !comCookie) {
+                                                userId = ukCookie.value;
+                                            }
+
+                                            csvContent += "User Id: " + userId + "\r\n";
+
+                                            csvContent += "--Consent Form Data--" + "\r\n";
+                                            csvContent += "Consent 1,Consent 2,Consent Text,Sign" + "\r\n";
+                                            if(finalConsent.consentText != null){
+                                                finalConsent.consentText = finalConsent.consentText.replace(/,/g, "");
+                                            }
+                                            csvContent += (finalConsent.consent1 != null ? finalConsent.consent1 : 'Unknown') + ',' + (finalConsent.consent2 != null ? finalConsent.consent2 : 'Unknown') + (finalConsent.consentText != null ? finalConsent.consentText : 'Unknown') + ',' + (finalConsent.sign != null ? finalConsent.sign : 'Unknown') + "\r\n";
+
+                                            //TODO: Add PreStudy here
+
+                                            csvContent += "--Search Data--" + "\r\n";
+                                            csvContent += "Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
+                                            finalSearches.forEach(function (item) {
+
+                                                var queryTimeItem = finalQueryTimes.find(x => x.queryText == item.searchText && x.end <= item.timeStamp);
+                                                var queryTime = 'Unknown';
+                                                if (queryTimeItem != null) {
+                                                    queryTime = queryTimeItem.end - queryTimeItem.start;
+                                                }
+
+                                                item.text = item.text.replace(/,/g, "");
+                                                item.searchText = item.searchText.replace(/,/g, "");
+
+                                                var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
+                                                csvContent += row;
+                                            });
+
+                                            csvContent += "--Click Data--" + "\r\n";
+                                            csvContent += "Search Text,Link,TimeStamp,Page,Rank,Advert" + "\r\n";
+                                            finalClicks.forEach(function (item) {
+                                                var search;
+                                                if (item.searchText != null) {
+                                                    item.searchText = item.searchText.replace(/,/g, "");
+                                                    search = finalSearches.find(x => x.searchText == item.searchText && x.link == item.link);
+                                                }
+                                                var row = item.searchText + ',' + item.link + ',' + item.date + ',' + (search != null ? search.page : 'Check Searches') + ',' + (search != null ? search.rank : 'Check Searches') + ',' + (search != null ? search.advert : 'Check Searches') + "\r\n";
+                                                csvContent += row;
+                                            });
+
+                                            csvContent += "--Search Time Data--" + "\r\n";
+                                            csvContent += "Search Text,Start,End" + "\r\n";
+                                            finalQueryTimes.forEach(function (item) {
+                                                if (item.queryText != null) {
+                                                    item.queryText = item.queryText.replace(/,/g, "");
+                                                }
+                                                var row = item.queryText + ',' + item.start + ',' + item.end + "\r\n";
+                                                csvContent += row;
+                                            });
+
+                                            csvContent += "--Bookmark Data--" + "\r\n";
+                                            csvContent += "Bookmark Id,Action,Url,TimeStamp" + "\r\n";
+                                            finalBookmarks.forEach(function (item) {
+                                                var row = item.bookmarkId + ',' + item.action + ',' + item.url + ',' + item.timeStamp + "\r\n";
+                                                csvContent += row;
+                                            });
+
+                                            csvContent += "--Url Data--" + "\r\n";
+                                            csvContent += "Url,TimeStamp,Active" + "\r\n";
+                                            finalUrls.forEach(function (item) {
+                                                var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
+                                                csvContent += row;
+                                            });
+
+                                            var encodedUri = encodeURI(csvContent);
+                                            var link = document.createElement("a");
+                                            link.setAttribute("href", encodedUri);
+                                            link.setAttribute("download", "IIR_Chrome_Extension_Data_" + userId + ".csv");
+                                            link.innerHTML = "Click Here to download";
+                                            document.body.appendChild(link);
+                                            link.click();
+                                        });
+                                    });
                                 });
-
-                                csvContent += "--Click Data--" + "\r\n";
-                                csvContent += "Search Text,Link,TimeStamp,Page,Rank,Advert" + "\r\n";
-                                finalClicks.forEach(function (item) {
-                                    var search;
-                                    if (item.searchText != null) {
-                                        item.searchText = item.searchText.replace(/,/g, "");
-                                        search = finalSearches.find(x => x.searchText == item.searchText && x.link == item.link);
-                                    }
-                                    var row = item.searchText + ',' + item.link + ',' + item.date + ',' + (search != null ? search.page : 'Check Searches') + ',' + (search != null ? search.rank : 'Check Searches') + ',' + (search != null ? search.advert : 'Check Searches') + "\r\n";
-                                    csvContent += row;
-                                });
-
-                                csvContent += "--Search Time Data--" + "\r\n";
-                                csvContent += "Search Text,Start,End" + "\r\n";
-                                finalQueryTimes.forEach(function (item) {
-                                    if (item.queryText != null) {
-                                        item.queryText = item.queryText.replace(/,/g, "");
-                                    }
-                                    var row = item.queryText + ',' + item.start + ',' + item.end + "\r\n";
-                                    csvContent += row;
-                                });
-
-                                csvContent += "--Bookmark Data--" + "\r\n";
-                                csvContent += "Bookmark Id,Action,Url,TimeStamp" + "\r\n";
-                                finalBookmarks.forEach(function (item) {
-                                    var row = item.bookmarkId + ',' + item.action + ',' + item.url + ',' + item.timeStamp + "\r\n";
-                                    csvContent += row;
-                                });
-
-                                csvContent += "--Url Data--" + "\r\n";
-                                csvContent += "Url,TimeStamp,Active" + "\r\n";
-                                finalUrls.forEach(function (item) {
-                                    var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
-                                    csvContent += row;
-                                });
-
-                                var encodedUri = encodeURI(csvContent);
-                                var link = document.createElement("a");
-                                link.setAttribute("href", encodedUri);
-                                link.setAttribute("download", "IIR_Chrome_Extension_Data_" + userId + ".csv");
-                                link.innerHTML = "Click Here to download";
-                                document.body.appendChild(link);
-                                link.click();
                             });
                         });
                     });
@@ -238,7 +264,7 @@ function download() {
             });
         });
     });
-};
+}
 
 chrome.contextMenus.create({
     title: "Download Data",
