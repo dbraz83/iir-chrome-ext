@@ -187,12 +187,26 @@ function download() {
 
                                             csvContent += "--Consent Form Data--" + "\r\n";
                                             csvContent += "Consent 1,Consent 2,Consent Text,Sign" + "\r\n";
-                                            if(finalConsent.consentText != null){
+                                            if (finalConsent.consentText != null) {
                                                 finalConsent.consentText = finalConsent.consentText.replace(/,/g, "");
                                             }
                                             csvContent += (finalConsent.consent1 != null ? finalConsent.consent1 : 'Unknown') + ',' + (finalConsent.consent2 != null ? finalConsent.consent2 : 'Unknown') + (finalConsent.consentText != null ? finalConsent.consentText : 'Unknown') + ',' + (finalConsent.sign != null ? finalConsent.sign : 'Unknown') + "\r\n";
 
-                                            //TODO: Add PreStudy here
+                                            csvContent += "--PreStudy Form Data--" + "\r\n";
+                                            csvContent += "Age,Nationality,Course,Gender,Language,Language Detail,IT Use,Internet Use,Search Engine Use,Search Engine Preference,Search Engine Detail,Email Update,Email Detail" + "\r\n";
+                                            if (finalPreStudy.course != null) {
+                                                finalPreStudy.course = finalPreStudy.course.replace(/,/g, "");
+                                            }
+                                            if (finalPreStudy.languageText != null) {
+                                                finalPreStudy.languageText = finalPreStudy.languageText.replace(/,/g, "");
+                                            }
+                                            if (finalPreStudy.searchEngineText != null) {
+                                                finalPreStudy.searchEngineText = finalPreStudy.searchEngineText.replace(/,/g, "");
+                                            }
+                                            if (finalPreStudy.updateText != null) {
+                                                finalPreStudy.updateText = finalPreStudy.updateText.replace(/,/g, "");
+                                            }
+                                            csvContent += (finalPreStudy.age != null ? finalPreStudy.age : 'Unknown') + ',' + (finalPreStudy.nationality != null ? finalPreStudy.nationality : 'Unknown') + ',' + (finalPreStudy.course != null ? finalPreStudy.course : 'Unknown') + ',' + (finalPreStudy.gender != null ? finalPreStudy.gender : 'Unknown') + ',' + (finalPreStudy.language != null ? finalPreStudy.language : 'Unknown') + ',' + (finalPreStudy.languageText != null ? finalPreStudy.languageText : 'Unknown') + ',' + (finalPreStudy.itUse != null ? finalPreStudy.itUse : 'Unknown') + ',' + (finalPreStudy.internetUse != null ? finalPreStudy.internetUse : 'Unknown') + ',' + (finalPreStudy.searchEngineUse != null ? finalPreStudy.searchEngineUse : 'Unknown') + ',' + (finalPreStudy.searchEnginePreference != null ? finalPreStudy.searchEnginePreference : 'Unknown') + ',' + (finalPreStudy.searchEngineText != null ? finalPreStudy.searchEngineText : 'Unknown') + ',' + (finalPreStudy.emailUpdate != null ? finalPreStudy.emailUpdate : 'Unknown') + ',' + (finalPreStudy.updateText != null ? finalPreStudy.updateText : 'Unknown') + ',' + "\r\n";
 
                                             csvContent += "--Search Data--" + "\r\n";
                                             csvContent += "Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
