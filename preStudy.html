@@ -19,13 +19,13 @@
 					<h3>Demographics</h3>
 
 					<p class="a">Age:</p>
-					<input type="text" id="age" name="age" size="5" maxlength="2">
+					<input type="text" id="age" name="age" size="5" maxlength="2" required>
 					<br>
 					<br>
 					<form id="nationality">
 						<p class="a">Nationality:</p>
 						<!--<input type="text" id="nationality" name="nationality" size="30" maxlength="30"><br><br>-->
-						<select name="countries" id="countries" form="nationality">
+						<select name="countries" id="countries" form="nationality" required>
 							<option value="Afghanistan">Afghanistan</option>
 							<option value="Albania">Albania</option>
 							<option value="Algeria">Algeria</option>
@@ -270,16 +270,16 @@
 					<br>
 					<br>
 					<p class="a">Course/Faculty:</p>
-					<input type="text" id="Occupation" name="Occupation" size="30">
+					<input type="text" id="Occupation" name="Occupation" size="30" required>
 					<br>
 					<br>
 					<p class="a">Gender</p>
-					<input type="radio" name="gender" value="male" checked> Male
+					<input type="radio" name="gender" value="male" required> Male
 					<input type="radio" name="gender" value="female"> Female
 					<input type="radio" name="gender" value="other"> Other
 					<h3>Language Fluency</h3>
 					<p class="a">English</p>
-					<input type="radio" name="language" value="eng-native" checked> Native (L1)
+					<input type="radio" name="language" value="eng-native" required> Native (L1)
 					<input type="radio" name="language" value="eng-fluent"> Fluent (L2)
 					<input type="radio" name="language" value="eng-prof"> Proficient (L3)
 					<input type="radio" name="language" value="eng-basic"> Basic (L4)
@@ -293,7 +293,7 @@
 					<p class="a">Please tick the most relevant response</p>
 
 					<p class="a">I.T. use</p>
-					<input type="radio" name="it_use" value="eng-min">Every few minutes
+					<input type="radio" name="it_use" value="eng-min" required>Every few minutes
 					<input type="radio" name="it_use" value="eng-hour">Hourly
 					<input type="radio" name="it_use" value="eng-daily">Daily
 					<input type="radio" name="it_use" value="eng-few">Few times a week
@@ -303,7 +303,7 @@
 					<br>
 					<br>
 					<p class="a">Internet use</p>
-					<input type="radio" name="inet_use" value="IU-min">Every few minutes
+					<input type="radio" name="inet_use" value="IU-min" required>Every few minutes
 					<input type="radio" name="inet_use" value="IU-hour">Hourly
 					<input type="radio" name="inet_use" value="IU-daily">Daily
 					<input type="radio" name="inet_use" value="IU-few">Few times a week
@@ -313,7 +313,7 @@
 					<br>
 					<br>
 					<p class="a">Search Engine use</p>
-					<input type="radio" name="se_use" value="SE-min">Every few minutes
+					<input type="radio" name="se_use" value="SE-min" required>Every few minutes
 					<input type="radio" name="se_use" value="SE-hour">Hourly
 					<input type="radio" name="se_use" value="SE-daily">Daily
 					<input type="radio" name="se_use" value="SE-few">Few times a week
@@ -323,7 +323,7 @@
 					<br>
 					<br>
 					<p class="a">Search Engine preference</p>
-					<input type="radio" name="se_pref" value="SE-a">Ask
+					<input type="radio" name="se_pref" value="SE-a" required>Ask
 					<input type="radio" name="se_pref" value="SE-b">Bing
 					<input type="radio" name="se_pref" value="SE-g">Google
 					<input type="radio" name="se_pref" value="SE-y">Yahoo
