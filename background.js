@@ -285,3 +285,18 @@ chrome.contextMenus.create({
     contexts: ["browser_action"],
     onclick: download
 });
+
+function countdownTimer()
+{
+    
+    var milliseconds = seconds * 1000;
+
+    setInterval(function () {
+
+        chrome.storage.local.get('iir_timer', function (result) {
+            var existingTime = result.iir_timer;
+            
+            
+    })
+    }, seconds)
+}

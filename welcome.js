@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('qlink').addEventListener('click', openQ);
 });
 
+
+
 //start study
 function startStudy() {
 
@@ -76,3 +78,30 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('preStudy').addEventListener('click', preStudy);
 });
 
+//event listener for click on view first question button
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('pre-study').addEventListener('click', countdown);
+});
+
+function countdown()//remsec in second
+{
+  var newURL = "https://www.google.co.uk/";
+  chrome.tabs.create({ url: newURL });
+
+  var endTime = new Date().getTime() + 600000
+  
+  var obj = {};
+  obj['iir_timer'] = endTime
+  chrome.storage.local.set(obj, function () {
+      chrome.storage.local.get('iir_timer', function (result) {
+          console.log(result);
+      });
+  });
+
+}
+
+function PostTask() {
+    {
+        chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+    }
+}
