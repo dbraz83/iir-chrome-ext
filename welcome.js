@@ -72,6 +72,7 @@ function preStudy() {
 	}
 	else {
     var preStudyValues = {
+        studyCode: $('#studyCode').val(),
         age: $('#age').val(),
         nationality: $('#countries').val(),
         course: $('#Occupation').val(),
