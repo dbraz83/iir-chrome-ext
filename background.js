@@ -39,6 +39,23 @@ function logCurrentUrl(seconds) {
             });
 
         });
+
+        chrome.storage.local.get('iir_timer', function (result) {
+            var storedTime = result.iir_timer;
+            var currentTime = new Date().getTime();
+            var timeLeft = storedTime - currentTime;
+            console.log(timeLeft);
+
+            var obj = {};
+            obj['iir_timer'] = urls
+            chrome.storage.local.set(obj, function () {
+                chrome.storage.local.get('iir_timer', function (result) {
+                    console.log(result);
+                });
+            });
+        });
+    
+
     }, milliseconds);
 };
 
@@ -288,18 +305,3 @@ chrome.contextMenus.create({
     contexts: ["browser_action"],
     onclick: download
 });
-
-function countdownTimer()
-{
-    
-    var milliseconds = seconds * 1000;
-
-    setInterval(function () {
-
-        chrome.storage.local.get('iir_timer', function (result) {
-            var existingTime = result.iir_timer;
-            
-            
-    })
-    }, seconds)
-}
