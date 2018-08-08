@@ -7,6 +7,14 @@ function showMenu() {
     chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") });
 };
 
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('instructions').addEventListener('click', showInst);
+});
+//open the main menu
+function showInst() {
+    chrome.tabs.create({ url: chrome.runtime.getURL("instructions.html") });
+};
+
 //function to open the first question page
 function openQ() {
     {
