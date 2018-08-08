@@ -291,7 +291,7 @@ function countdown()//remsec in second
     var newURL = "https://www.google.co.uk/";
     chrome.tabs.create({ url: newURL });
 
-    var endTime = new Date().getTime() + 600000
+    var endTime = new Date().getTime() + 60000
 
     var obj = {};
     obj['iir_timer'] = endTime

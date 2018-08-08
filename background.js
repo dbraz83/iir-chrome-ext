@@ -2,7 +2,7 @@ var urls = [];
 var bookmarks = [];
 
 $(document).ready(function () {
-    logCurrentUrl(10);
+    logCurrentUrl(1);
 });
 
 function logCurrentUrl(seconds) {
@@ -10,6 +10,7 @@ function logCurrentUrl(seconds) {
     console.log("URL tracking activated.");
 
     var milliseconds = seconds * 1000;
+    var timeEnded = false;
 
     setInterval(function () {
 
@@ -44,15 +45,26 @@ function logCurrentUrl(seconds) {
             var storedTime = result.iir_timer;
             var currentTime = new Date().getTime();
             var timeLeft = storedTime - currentTime;
+            
             console.log(timeLeft);
 
-            var obj = {};
-            obj['iir_timer'] = urls
-            chrome.storage.local.set(obj, function () {
-                chrome.storage.local.get('iir_timer', function (result) {
-                    console.log(result);
-                });
+            if (timeLeft <= 0 && timeEnded == false)
+            {
+                    timeEnded = true;
+                    
+                    chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+            }
+
+            var views = chrome.extension.getViews({
+                type: "popup"
             });
+
+            var realTime = millisecondsToTime(timeLeft)
+
+            for (var i = 0; i < views.length; i++) {
+                views[i].document.getElementById('x').innerHTML = realTime;
+            }
+
         });
     
 
@@ -298,6 +310,15 @@ function download() {
             });
         });
     });
+}
+
+function millisecondsToTime(milli)
+{
+      var milliseconds = milli % 1000;
+      var seconds = Math.floor((milli / 1000) % 60);
+      var minutes = Math.floor((milli / (60 * 1000)) % 60);
+
+      return minutes + ":" + seconds + "." + milliseconds;
 }
 
 chrome.contextMenus.create({
