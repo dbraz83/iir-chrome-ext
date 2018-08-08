@@ -22,8 +22,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //start study
-function startStudy() {
 
+
+function startStudy() {
+//before we store the form values we check if all were checked
+	if(document.consent.consent1.checked == false || document.consent.consent2.checked == false || document.consent.sign.checked == false){
+	alert ('Please check your answers and ensure all are complete if you want to proceed');
+        
+} 
+else {
+		
     var consentValues = {
         consent1: $('#consent1').is(':checked'),
         consent2: $('#consent2').is(':checked'),
@@ -37,9 +45,12 @@ function startStudy() {
         chrome.storage.local.get('iir_form_consent', function (result) {
             console.log(result);
             chrome.tabs.update({ url: chrome.runtime.getURL("preStudy.html") });
+			
         });
+		
     });
 
+}
 }
 //event listener for submitting consent and starting preStudy questionnaire
 document.addEventListener('DOMContentLoaded', function () {
@@ -47,7 +58,11 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 //start pre task
 function preStudy() {
-
+//before we store the form values we check if all were checked
+	if(document.preStudy.age.value == "" || document.getElementById("countries").value == "blank" || document.preStudy.Occupation.value == "" || document.preStudy.gender.checked == false || document.preStudy.language.checked == false || document.preStudy.lang_text.value == "" || document.preStudy.it_use.checked == false || document.preStudy.se_use.checked == false || document.preStudy.se_pref.checked == false){
+	alert ('Please check your answers and ensure all are complete if you want to proceed');
+	}
+	else {
     var preStudyValues = {
         age: $('#age').val(),
         nationality: $('#countries').val(),
@@ -72,6 +87,7 @@ function preStudy() {
             chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
         });
     });
+}
 }
 //event listener for submitting preStudy questionnaire
 document.addEventListener('DOMContentLoaded', function () {
