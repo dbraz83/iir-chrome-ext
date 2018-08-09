@@ -46,27 +46,41 @@ function logCurrentUrl(seconds) {
             var currentTime = new Date().getTime();
             var timeLeft = storedTime - currentTime;
             
+        
             console.log(timeLeft);
-
-            if (timeLeft <= 0 && timeEnded == false)
+if(storedTime != 'undefined')
+{
+            if (timeLeft <= 0)
             {
-                    timeEnded = true;
-                    
-                    chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+                chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+                chrome.storage.local.remove(["iir_timer"],function(){
+                    var error = chrome.runtime.lastError;
+                       if (error) {
+                           console.error(error);
+                       }
+                   })
             }
 
             var views = chrome.extension.getViews({
                 type: "popup"
             });
-
+            
+        if(timeLeft >= 0)
+        {
             var realTime = millisecondsToTime(timeLeft)
 
             for (var i = 0; i < views.length; i++) {
                 views[i].document.getElementById('x').innerHTML = realTime;
             }
+        }
+        else
+        {
+            views[i].document.getElementById('x').innerHTML = "00:00";
 
+        }
+}
         });
-    
+       
 
     }, milliseconds);
 };
@@ -342,7 +356,7 @@ function millisecondsToTime(milli)
       var seconds = Math.floor((milli / 1000) % 60);
       var minutes = Math.floor((milli / (60 * 1000)) % 60);
 
-      return minutes + ":" + seconds + "." + milliseconds;
+      return minutes + ":" + seconds;
 }
 
 chrome.contextMenus.create({
@@ -350,20 +364,3 @@ chrome.contextMenus.create({
     contexts: ["browser_action"],
     onclick: download
 });
-<<<<<<< HEAD
-=======
-
-function countdownTimer() {
-
-    var milliseconds = seconds * 1000;
-
-    setInterval(function () {
-
-        chrome.storage.local.get('iir_timer', function (result) {
-            var existingTime = result.iir_timer;
-
-
-        })
-    }, seconds)
-}
->>>>>>> 9ec73e0a2054157345e89d972d5af4a3daf4a8f0

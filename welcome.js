@@ -297,14 +297,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function countdown()//remsec in second
 {
-<<<<<<< HEAD
     var newURL = "https://www.google.co.uk/";
     chrome.tabs.create({ url: newURL });
 
     var endTime = new Date().getTime() + 60000
-=======
-    var endTime = new Date().getTime() + 600000;
->>>>>>> 9ec73e0a2054157345e89d972d5af4a3daf4a8f0
 
     var obj = {};
     obj['iir_timer'] = endTime
