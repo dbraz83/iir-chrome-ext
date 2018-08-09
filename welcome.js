@@ -269,7 +269,8 @@ function preStudy() {
                 chrome.storage.local.set(taskObj, function () {
                     chrome.storage.local.get('iir_tasks', function (result) {
                         console.log(result);
-                        chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+                        var page = taskOrder.task1 + '.html';
+                        chrome.tabs.update({ url: chrome.runtime.getURL(page) });
                     });
                 });
             });
@@ -281,6 +282,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('preStudy').addEventListener('click', preStudy);
 });
 
+function goToPreTask() {
+    chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('task-start').addEventListener('click', goToPreTask);
+});
+
 //event listener for click on view first question button
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('pre-study').addEventListener('click', countdown);
@@ -288,10 +297,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function countdown()//remsec in second
 {
+<<<<<<< HEAD
     var newURL = "https://www.google.co.uk/";
     chrome.tabs.create({ url: newURL });
 
     var endTime = new Date().getTime() + 60000
+=======
+    var endTime = new Date().getTime() + 600000;
+>>>>>>> 9ec73e0a2054157345e89d972d5af4a3daf4a8f0
 
     var obj = {};
     obj['iir_timer'] = endTime
@@ -302,7 +315,7 @@ function countdown()//remsec in second
             var tasks = [];
             chrome.storage.local.get('iir_tasks', function (result) {
                 var existingTasks = result.iir_tasks;
-                if (typeof existingTasks != 'undefined') {                    
+                if (typeof existingTasks != 'undefined') {
                     tasks = existingTasks;
                 }
 
@@ -328,8 +341,17 @@ function countdown()//remsec in second
                     var preTaskObj = {};
                     preTaskObj['iir_form_pretasks'] = preTasks
                     chrome.storage.local.set(preTaskObj, function () {
-                        var page = nextTask.task + '.html';
-                        chrome.tabs.update({ url: chrome.runtime.getURL(page) });
+                        for (var i in tasks) {
+                            if (tasks[i].task == nextTask.task) {
+                                tasks[i].preTaskComplete = true;
+                            }
+                        }
+
+                        var taskObj = {};
+                        taskObj['iir_tasks'] = tasks
+                        chrome.storage.local.set(taskObj, function () {
+                            chrome.tabs.update({ url: "https://google.co.uk" });
+                        });
                     });
                 });
             });
@@ -396,7 +418,8 @@ function postStudy() {
                         nextTask = tasks.find(x => x.complete == false);
 
                         if (nextTask != null) {
-                            chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+                            var page = nextTask.task + '.html';
+                            chrome.tabs.update({ url: chrome.runtime.getURL(page) });
                         }
                         else {
                             chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
@@ -411,4 +434,35 @@ function postStudy() {
 //event listener for click on view first question button
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('post-study').addEventListener('click', postStudy);
+});
+
+function resumeStudy() {
+    var tasks = [];
+    chrome.storage.local.get('iir_tasks', function (result) {
+        var existingTasks = result.iir_tasks;
+        if (typeof existingTasks != 'undefined') {
+            tasks = existingTasks;
+        }
+
+        nextTask = tasks.find(x => x.complete == false);
+
+        if (nextTask != null) {
+            if (nextTask.preTaskComplete == false) {
+                chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+            }            
+            else if (nextTask.postTaskComplete == false) {
+                chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+            }
+            else{
+                chrome.tabs.update({url:"https://google.co.uk"})
+            }
+        }
+        else {
+            chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('resume').addEventListener('click', resumeStudy);
 });
