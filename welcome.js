@@ -161,7 +161,14 @@ function showInst() {
 //function to open the first question page
 function openQ() {
     {
-        chrome.tabs.update({ url: chrome.runtime.getURL("consentForm.html") });
+        chrome.storage.local.get('iir_form_consent', function (result) {
+            if (typeof result != 'undefined') {
+                chrome.tabs.update({ url: "https://google.co.uk" });
+            }
+            else {
+                chrome.tabs.update({ url: chrome.runtime.getURL("consentForm.html") });
+            }
+        });
     }
 }
 
@@ -445,12 +452,12 @@ function resumeStudy() {
         if (nextTask != null) {
             if (nextTask.preTaskComplete == false) {
                 chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
-            }            
+            }
             else if (nextTask.postTaskComplete == false) {
                 chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
             }
-            else{
-                chrome.tabs.update({url:"https://google.co.uk"})
+            else {
+                chrome.tabs.update({ url: "https://google.co.uk" })
             }
         }
         else {
@@ -461,4 +468,20 @@ function resumeStudy() {
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('resume').addEventListener('click', resumeStudy);
+});
+
+$(function () {
+    var tasks = [];
+    chrome.storage.local.get('iir_tasks', function (result) {
+        var existingTasks = result.iir_tasks;
+        if (typeof existingTasks != 'undefined') {
+            tasks = existingTasks;
+        }
+        var pageName = $('#page').val();
+        var thisTask = tasks.find(x => x.task == pageName);
+
+        if(thisTask != null && thisTask.preTaskComplete){                        
+            $('#task-start').hide();
+        }
+    });
 });
