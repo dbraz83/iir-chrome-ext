@@ -470,6 +470,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('resume').addEventListener('click', resumeStudy);
 });
 
+function endTask(){
+    chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('end-task').addEventListener('click', endTask);
+});
+
 $(function () {
     var tasks = [];
     chrome.storage.local.get('iir_tasks', function (result) {
