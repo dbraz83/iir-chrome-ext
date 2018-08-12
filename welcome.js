@@ -249,25 +249,29 @@ function preStudy() {
                         task: taskOrder.task1,
                         complete: false,
                         preTaskComplete: false,
-                        postTaskComplete: false
+                        postTaskComplete: false,
+                        taskEndTime: null
                     },
                     {
                         task: taskOrder.task2,
                         complete: false,
                         preTaskComplete: false,
-                        postTaskComplete: false
+                        postTaskComplete: false,
+                        taskEndTime: null
                     },
                     {
                         task: taskOrder.task3,
                         complete: false,
                         preTaskComplete: false,
-                        postTaskComplete: false
+                        postTaskComplete: false,
+                        taskEndTime: null
                     },
                     {
                         task: taskOrder.task4,
                         complete: false,
                         preTaskComplete: false,
-                        postTaskComplete: false
+                        postTaskComplete: false,
+                        taskEndTime: null
                     }
                 ]
 
@@ -472,7 +476,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function endTask(){
     chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+    
+    //log the time task was stopped to the tasks storage
+    var tasks = [];
+    chrome.storage.local.get('iir_tasks', function (result) {
+        var existingTasks = result.iir_tasks;
+        if (typeof existingTasks != 'undefined') {
+            tasks = existingTasks;
+        }
+
+        chrome.storage.local.get('iir_timer', function (result) {
+            var storedTime = result.iir_timer;
+            var currentTime = new Date().getTime();
+            var timeLeft = storedTime - currentTime;
+        });
+
+        tasks.taskEndTime = timeLeft;
+
+    //save the task
+
+    
+
+    //remove the stored time to stop clock
+    chrome.storage.local.remove(["iir_timer"], function () {
+        var error = chrome.runtime.lastError;
+        if (error) {
+            console.error(error);
+        }
+    })
 }
+)};
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('end-task').addEventListener('click', endTask);
