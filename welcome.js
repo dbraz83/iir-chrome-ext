@@ -162,7 +162,7 @@ function showInst() {
 function openQ() {
     {
         chrome.storage.local.get('iir_form_consent', function (result) {
-            if (typeof result != 'undefined') {
+            if (typeof result.iir_form_consent != 'undefined') {
                 chrome.tabs.update({ url: "https://google.co.uk" });
             }
             else {

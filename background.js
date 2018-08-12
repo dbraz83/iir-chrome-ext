@@ -13,7 +13,6 @@ function logCurrentUrl(seconds) {
     var timeEnded = false;
 
     setInterval(function () {
-
         chrome.storage.local.get('iir_urls', function (result) {
             var existingUrls = result.iir_urls;
             if (typeof existingUrls != 'undefined') {
@@ -45,42 +44,38 @@ function logCurrentUrl(seconds) {
             var storedTime = result.iir_timer;
             var currentTime = new Date().getTime();
             var timeLeft = storedTime - currentTime;
-            
-        
+
+
             console.log(timeLeft);
-if(storedTime != 'undefined')
-{
-            if (timeLeft <= 0)
-            {
-                chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
-                chrome.storage.local.remove(["iir_timer"],function(){
-                    var error = chrome.runtime.lastError;
-                       if (error) {
-                           console.error(error);
-                       }
-                   })
+            if (storedTime != 'undefined') {
+                if (timeLeft <= 0) {
+                    chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+                    chrome.storage.local.remove(["iir_timer"], function () {
+                        var error = chrome.runtime.lastError;
+                        if (error) {
+                            console.error(error);
+                        }
+                    })
+                }
+
+                var views = chrome.extension.getViews({
+                    type: "popup"
+                });
+
+                if (timeLeft >= 0) {
+                    var realTime = millisecondsToTime(timeLeft)
+
+                    for (var i = 0; i < views.length; i++) {
+                        views[i].document.getElementById('x').innerHTML = realTime;
+                    }
+                }
+                else {
+                    views[i].document.getElementById('x').innerHTML = "00:00";
+
+                }
             }
-
-            var views = chrome.extension.getViews({
-                type: "popup"
-            });
-            
-        if(timeLeft >= 0)
-        {
-            var realTime = millisecondsToTime(timeLeft)
-
-            for (var i = 0; i < views.length; i++) {
-                views[i].document.getElementById('x').innerHTML = realTime;
-            }
-        }
-        else
-        {
-            views[i].document.getElementById('x').innerHTML = "00:00";
-
-        }
-}
         });
-       
+
 
     }, milliseconds);
 };
@@ -238,96 +233,113 @@ function download() {
 
                                                     csvContent += "--Consent Form Data--" + "\r\n";
                                                     csvContent += "Consent 1,Consent 2,Consent Text,Sign" + "\r\n";
-                                                    if (finalConsent.consentText != null) {
-                                                        finalConsent.consentText = finalConsent.consentText.replace(/,/g, "");
+                                                    if (finalConsent != null) {
+                                                        if (finalConsent.consentText != null) {
+                                                            finalConsent.consentText = finalConsent.consentText.replace(/,/g, "");
+                                                        }
+                                                        csvContent += (finalConsent.consent1 != null ? finalConsent.consent1 : 'Unknown') + ',' + (finalConsent.consent2 != null ? finalConsent.consent2 : 'Unknown') + (finalConsent.consentText != null ? finalConsent.consentText : 'Unknown') + ',' + (finalConsent.sign != null ? finalConsent.sign : 'Unknown') + "\r\n";
                                                     }
-                                                    csvContent += (finalConsent.consent1 != null ? finalConsent.consent1 : 'Unknown') + ',' + (finalConsent.consent2 != null ? finalConsent.consent2 : 'Unknown') + (finalConsent.consentText != null ? finalConsent.consentText : 'Unknown') + ',' + (finalConsent.sign != null ? finalConsent.sign : 'Unknown') + "\r\n";
-
                                                     csvContent += "--PreStudy Form Data--" + "\r\n";
                                                     csvContent += "StudyCode,Age,Nationality,Course,Gender,Language,Language Detail,IT Use,Internet Use,Search Engine Use,Search Engine Preference,Search Engine Detail,Email Update,Email Detail" + "\r\n";
-                                                    if (finalPreStudy.studyCode != null) {
-                                                        finalPreStudy.studyCode = finalPreStudy.studyCode.replace(/,/g, "");
+                                                    if (finalPreStudy != null) {
+                                                        if (finalPreStudy.studyCode != null) {
+                                                            finalPreStudy.studyCode = finalPreStudy.studyCode.replace(/,/g, "");
+                                                        }
+                                                        if (finalPreStudy.course != null) {
+                                                            finalPreStudy.course = finalPreStudy.course.replace(/,/g, "");
+                                                        }
+                                                        if (finalPreStudy.languageText != null) {
+                                                            finalPreStudy.languageText = finalPreStudy.languageText.replace(/,/g, "");
+                                                        }
+                                                        if (finalPreStudy.searchEngineText != null) {
+                                                            finalPreStudy.searchEngineText = finalPreStudy.searchEngineText.replace(/,/g, "");
+                                                        }
+                                                        if (finalPreStudy.updateText != null) {
+                                                            finalPreStudy.updateText = finalPreStudy.updateText.replace(/,/g, "");
+                                                        }
+                                                        csvContent += (finalPreStudy.studyCode != null ? finalPreStudy.studyCode : 'Unknown') + ',' + (finalPreStudy.age != null ? finalPreStudy.age : 'Unknown') + ',' + (finalPreStudy.nationality != null ? finalPreStudy.nationality : 'Unknown') + ',' + (finalPreStudy.course != null ? finalPreStudy.course : 'Unknown') + ',' + (finalPreStudy.gender != null ? finalPreStudy.gender : 'Unknown') + ',' + (finalPreStudy.language != null ? finalPreStudy.language : 'Unknown') + ',' + (finalPreStudy.languageText != null ? finalPreStudy.languageText : 'Unknown') + ',' + (finalPreStudy.itUse != null ? finalPreStudy.itUse : 'Unknown') + ',' + (finalPreStudy.internetUse != null ? finalPreStudy.internetUse : 'Unknown') + ',' + (finalPreStudy.searchEngineUse != null ? finalPreStudy.searchEngineUse : 'Unknown') + ',' + (finalPreStudy.searchEnginePreference != null ? finalPreStudy.searchEnginePreference : 'Unknown') + ',' + (finalPreStudy.searchEngineText != null ? finalPreStudy.searchEngineText : 'Unknown') + ',' + (finalPreStudy.emailUpdate != null ? finalPreStudy.emailUpdate : 'Unknown') + ',' + (finalPreStudy.updateText != null ? finalPreStudy.updateText : 'Unknown') + ',' + "\r\n";
                                                     }
-                                                    if (finalPreStudy.course != null) {
-                                                        finalPreStudy.course = finalPreStudy.course.replace(/,/g, "");
-                                                    }
-                                                    if (finalPreStudy.languageText != null) {
-                                                        finalPreStudy.languageText = finalPreStudy.languageText.replace(/,/g, "");
-                                                    }
-                                                    if (finalPreStudy.searchEngineText != null) {
-                                                        finalPreStudy.searchEngineText = finalPreStudy.searchEngineText.replace(/,/g, "");
-                                                    }
-                                                    if (finalPreStudy.updateText != null) {
-                                                        finalPreStudy.updateText = finalPreStudy.updateText.replace(/,/g, "");
-                                                    }
-                                                    csvContent += (finalPreStudy.studyCode != null ? finalPreStudy.studyCode : 'Unknown') + ',' + (finalPreStudy.age != null ? finalPreStudy.age : 'Unknown') + ',' + (finalPreStudy.nationality != null ? finalPreStudy.nationality : 'Unknown') + ',' + (finalPreStudy.course != null ? finalPreStudy.course : 'Unknown') + ',' + (finalPreStudy.gender != null ? finalPreStudy.gender : 'Unknown') + ',' + (finalPreStudy.language != null ? finalPreStudy.language : 'Unknown') + ',' + (finalPreStudy.languageText != null ? finalPreStudy.languageText : 'Unknown') + ',' + (finalPreStudy.itUse != null ? finalPreStudy.itUse : 'Unknown') + ',' + (finalPreStudy.internetUse != null ? finalPreStudy.internetUse : 'Unknown') + ',' + (finalPreStudy.searchEngineUse != null ? finalPreStudy.searchEngineUse : 'Unknown') + ',' + (finalPreStudy.searchEnginePreference != null ? finalPreStudy.searchEnginePreference : 'Unknown') + ',' + (finalPreStudy.searchEngineText != null ? finalPreStudy.searchEngineText : 'Unknown') + ',' + (finalPreStudy.emailUpdate != null ? finalPreStudy.emailUpdate : 'Unknown') + ',' + (finalPreStudy.updateText != null ? finalPreStudy.updateText : 'Unknown') + ',' + "\r\n";
 
                                                     csvContent += "--PreTask Form Data--" + "\r\n";
                                                     csvContent += "Task,Experience,Know,Interested,Difficult" + "\r\n";
-                                                    finalPreTasks.forEach(function (item) {
-                                                        var row = item.task + ',' + item.exp + ',' + item.know + ',' + item.int + ',' + item.diff + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                    if (finalPreTasks != null) {
+                                                        finalPreTasks.forEach(function (item) {
+                                                            var row = item.task + ',' + item.exp + ',' + item.know + ',' + item.int + ',' + item.diff + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     csvContent += "--PostTask Form Data--" + "\r\n";
                                                     csvContent += "Task,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13" + "\r\n";
-                                                    finalPostTasks.forEach(function (item) {
-                                                        var row = item.task + ',' + item.q1 + ',' + item.q2 + ',' + item.q3 + ',' + item.q4 + ',' + item.q5 + ',' + item.q6 + ',' + item.q7 + ',' + item.q8 + ',' + item.q9 + ',' + item.q10 + ',' + item.q11 + ',' + item.q12 + ',' + item.q13 + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                    if (finalPostTasks != null) {
+                                                        finalPostTasks.forEach(function (item) {
+                                                            var row = item.task + ',' + item.q1 + ',' + item.q2 + ',' + item.q3 + ',' + item.q4 + ',' + item.q5 + ',' + item.q6 + ',' + item.q7 + ',' + item.q8 + ',' + item.q9 + ',' + item.q10 + ',' + item.q11 + ',' + item.q12 + ',' + item.q13 + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     csvContent += "--Search Data--" + "\r\n";
                                                     csvContent += "Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
-                                                    finalSearches.forEach(function (item) {
+                                                    if (finalSearches != null) {
+                                                        finalSearches.forEach(function (item) {
 
-                                                        var queryTimeItem = finalQueryTimes.find(x => x.queryText == item.searchText && x.end <= item.timeStamp);
-                                                        var queryTime = 'Unknown';
-                                                        if (queryTimeItem != null) {
-                                                            queryTime = queryTimeItem.end - queryTimeItem.start;
-                                                        }
+                                                            var queryTimeItem = finalQueryTimes.find(x => x.queryText == item.searchText && x.end <= item.timeStamp);
+                                                            var queryTime = 'Unknown';
+                                                            if (queryTimeItem != null) {
+                                                                queryTime = queryTimeItem.end - queryTimeItem.start;
+                                                            }
 
-                                                        item.text = item.text.replace(/,/g, "");
-                                                        item.searchText = item.searchText.replace(/,/g, "");
+                                                            item.text = item.text.replace(/,/g, "");
+                                                            item.searchText = item.searchText.replace(/,/g, "");
 
-                                                        var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                            var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     csvContent += "--Click Data--" + "\r\n";
                                                     csvContent += "Search Text,Link,TimeStamp,Page,Rank,Advert" + "\r\n";
-                                                    finalClicks.forEach(function (item) {
-                                                        var search;
-                                                        if (item.searchText != null) {
-                                                            item.searchText = item.searchText.replace(/,/g, "");
-                                                            search = finalSearches.find(x => x.searchText == item.searchText && x.link == item.link);
-                                                        }
-                                                        var row = item.searchText + ',' + item.link + ',' + item.date + ',' + (search != null ? search.page : 'Check Searches') + ',' + (search != null ? search.rank : 'Check Searches') + ',' + (search != null ? search.advert : 'Check Searches') + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                    if (finalClicks != null) {
+                                                        finalClicks.forEach(function (item) {
+                                                            var search;
+                                                            if (item.searchText != null) {
+                                                                item.searchText = item.searchText.replace(/,/g, "");
+                                                                search = finalSearches.find(x => x.searchText == item.searchText && x.link == item.link);
+                                                            }
+                                                            var row = item.searchText + ',' + item.link + ',' + item.date + ',' + (search != null ? search.page : 'Check Searches') + ',' + (search != null ? search.rank : 'Check Searches') + ',' + (search != null ? search.advert : 'Check Searches') + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     csvContent += "--Search Time Data--" + "\r\n";
                                                     csvContent += "Search Text,Start,End" + "\r\n";
-                                                    finalQueryTimes.forEach(function (item) {
-                                                        if (item.queryText != null) {
-                                                            item.queryText = item.queryText.replace(/,/g, "");
-                                                        }
-                                                        var row = item.queryText + ',' + item.start + ',' + item.end + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                    if (finalQueryTimes != null) {
+                                                        finalQueryTimes.forEach(function (item) {
+                                                            if (item.queryText != null) {
+                                                                item.queryText = item.queryText.replace(/,/g, "");
+                                                            }
+                                                            var row = item.queryText + ',' + item.start + ',' + item.end + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     csvContent += "--Bookmark Data--" + "\r\n";
                                                     csvContent += "Bookmark Id,Action,Url,TimeStamp" + "\r\n";
-                                                    finalBookmarks.forEach(function (item) {
-                                                        var row = item.bookmarkId + ',' + item.action + ',' + item.url + ',' + item.timeStamp + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                    if (finalBookmarks != null) {
+                                                        finalBookmarks.forEach(function (item) {
+                                                            var row = item.bookmarkId + ',' + item.action + ',' + item.url + ',' + item.timeStamp + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     csvContent += "--Url Data--" + "\r\n";
                                                     csvContent += "Url,TimeStamp,Active" + "\r\n";
-                                                    finalUrls.forEach(function (item) {
-                                                        var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
-                                                        csvContent += row;
-                                                    });
+                                                    if (finalUrls != null) {
+                                                        finalUrls.forEach(function (item) {
+                                                            var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
+                                                            csvContent += row;
+                                                        });
+                                                    }
 
                                                     var encodedUri = encodeURI(csvContent);
                                                     var link = document.createElement("a");
@@ -350,13 +362,12 @@ function download() {
     });
 }
 
-function millisecondsToTime(milli)
-{
-      var milliseconds = milli % 1000;
-      var seconds = Math.floor((milli / 1000) % 60);
-      var minutes = Math.floor((milli / (60 * 1000)) % 60);
+function millisecondsToTime(milli) {
+    var milliseconds = milli % 1000;
+    var seconds = Math.floor((milli / 1000) % 60);
+    var minutes = Math.floor((milli / (60 * 1000)) % 60);
 
-      return minutes + ":" + seconds;
+    return minutes + ":" + seconds;
 }
 
 chrome.contextMenus.create({
