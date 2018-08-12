@@ -44,9 +44,7 @@ function logCurrentUrl(seconds) {
             var storedTime = result.iir_timer;
             var currentTime = new Date().getTime();
             var timeLeft = storedTime - currentTime;
-
-
-            console.log(timeLeft);
+            
             if (storedTime != 'undefined') {
                 if (timeLeft <= 0) {
                     chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
