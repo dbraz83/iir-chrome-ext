@@ -13,67 +13,79 @@ function logCurrentUrl(seconds) {
     var timeEnded = false;
 
     setInterval(function () {
-        chrome.storage.local.get('iir_urls', function (result) {
-            var existingUrls = result.iir_urls;
-            if (typeof existingUrls != 'undefined') {
-                urls = existingUrls;
+
+        var tasks = [];
+        chrome.storage.local.get('iir_tasks', function (result) {
+            var existingTasks = result.iir_tasks;
+            if (typeof existingTasks != 'undefined') {
+                tasks = existingTasks;
             }
 
-            chrome.tabs.query({}, function (tabs) {
-                tabs.forEach(tab => {
-                    var item = {
-                        url: tab.url,
-                        timeStamp: new Date().getTime(),
-                        active: tab.active
-                    }
-                    urls.push(item);
-                });
+            var nextTask = tasks.find(x => x.complete == false);
 
-                var obj = {};
-                obj['iir_urls'] = urls
-                chrome.storage.local.set(obj, function () {
-                    chrome.storage.local.get('iir_urls', function (result) {
-                        console.log(result);
+            if (nextTask != null) {
+                chrome.storage.local.get('iir_urls', function (result) {
+                    var existingUrls = result.iir_urls;
+                    if (typeof existingUrls != 'undefined') {
+                        urls = existingUrls;
+                    }
+
+                    chrome.tabs.query({}, function (tabs) {
+                        tabs.forEach(tab => {
+                            var item = {
+                                url: tab.url,
+                                timeStamp: new Date().getTime(),
+                                active: tab.active
+                            }
+                            urls.push(item);
+                        });
+
+                        var obj = {};
+                        obj['iir_urls'] = urls
+                        chrome.storage.local.set(obj, function () {
+                            chrome.storage.local.get('iir_urls', function (result) {
+                                console.log(result);
+                            });
+                        });
                     });
+
                 });
-            });
 
-        });
+                chrome.storage.local.get('iir_timer', function (result) {
+                    var storedTime = result.iir_timer;
+                    var currentTime = new Date().getTime();
+                    var timeLeft = storedTime - currentTime;
 
-        chrome.storage.local.get('iir_timer', function (result) {
-            var storedTime = result.iir_timer;
-            var currentTime = new Date().getTime();
-            var timeLeft = storedTime - currentTime;
-            
-            if (storedTime != 'undefined') {
-                if (timeLeft <= 0) {
-                    chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
-                    chrome.storage.local.remove(["iir_timer"], function () {
-                        var error = chrome.runtime.lastError;
-                        if (error) {
-                            console.error(error);
+                    if (storedTime != 'undefined') {
+                        if (timeLeft <= 0) {
+                            chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+                            chrome.storage.local.remove(["iir_timer"], function () {
+                                var error = chrome.runtime.lastError;
+                                if (error) {
+                                    console.error(error);
+                                }
+                            })
                         }
-                    })
-                }
 
-                var views = chrome.extension.getViews({
-                    type: "popup"
-                });
+                        var views = chrome.extension.getViews({
+                            type: "popup"
+                        });
 
-                if (timeLeft >= 0) {
-                    var realTime = millisecondsToTime(timeLeft)
+                        if (timeLeft >= 0) {
+                            var realTime = millisecondsToTime(timeLeft)
 
-                    for (var i = 0; i < views.length; i++) {
-                        views[i].document.getElementById('x').innerHTML = realTime;
+                            for (var i = 0; i < views.length; i++) {
+                                views[i].document.getElementById('x').innerHTML = realTime;
+                            }
+                        }
+                        else {
+                            views[i].document.getElementById('x').innerHTML = "00:00";
+
+                        }
                     }
-                }
-                else {
-                    views[i].document.getElementById('x').innerHTML = "00:00";
-
-                }
+                });
             }
         });
-
 
     }, milliseconds);
 };
