@@ -140,14 +140,39 @@ var latinSquare = [
         task3: "visa"
     }
 ]
+function hideShow(){
+var tasks = [];
+    chrome.storage.local.get('iir_tasks', function (result) {
+        var existingTasks = result.iir_tasks;
+        if (typeof existingTasks != 'undefined') {
+            tasks = existingTasks;
+        }
 
+        nextTask = tasks.find(x => x.complete == false);
+        
+        if (nextTask == null) {
+        document.getElementById("menu").style.visibility='visible';
+		document.getElementById("resume").style.visibility='hidden';
+		document.getElementById("end-task").style.visibility='hidden';
+		document.getElementById("task").style.visibility='hidden';
+	}
+	else {
+		document.getElementById("menu").style.visibility='hidden';
+		document.getElementById("resume").style.visibility='visible';
+		document.getElementById("end-task").style.visibility='visible';
+		document.getElementById("task").style.visibility='visible';
+		}
+	});
+}
 //event listener for the main menu click
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('menu').addEventListener('click', showMenu);
+	
 });
 //open the main menu
 function showMenu() {
     chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") });
+	
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -156,7 +181,11 @@ document.addEventListener('DOMContentLoaded', function () {
 //open the main menu
 function showInst() {
     chrome.tabs.create({ url: chrome.runtime.getURL("instructions.html") });
+	
 };
+
+
+
 
 //function to open the first question page
 function openQ() {
@@ -295,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function goToPreTask() {
     chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+	
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -309,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function countdown()//remsec in second
 {
     var newURL = "https://www.google.co.uk/";
-    chrome.tabs.create({ url: newURL });
+    chrome.tabs.update({ url: newURL });
 
     var endTime = new Date().getTime() + 60000
 
@@ -527,8 +557,43 @@ $(function () {
         var pageName = $('#page').val();
         var thisTask = tasks.find(x => x.task == pageName);
 
-        if(thisTask != null && thisTask.preTaskComplete){                        
-            $('#task-start').hide();
+        if(thisTask != null && thisTask.preTaskComplete){      
+			$('#task-start').hide();
         }
     });
 });
+
+// to clear all local.storage arrays
+
+function clear(){
+chrome.storage.local.remove(["iir_urls","iir_form_pretasks","iir_tasks","iir_form_consent","iir_form_prestudy","iir_timer","iir_bookmarks","iir_form_posttasks","iir_searches","iir_clicks","iir_querytime"],function(){
+ var error = chrome.runtime.lastError;
+    if (error) {
+        console.error(error);
+    }
+})
+}
+
+// finding the task description
+function taskDesc(){
+	var tasks = [];
+chrome.storage.local.get('iir_tasks', function (result) {
+    var existingTasks = result.iir_tasks;
+    if (typeof existingTasks != 'undefined') {
+        tasks = existingTasks;
+    }
+    nextTask = tasks.find(x => x.complete == false);
+
+    if (nextTask != null) {
+        var page = nextTask.task + '.html';
+        chrome.tabs.create({ url: chrome.runtime.getURL(page) });
+	}
+    else {
+        chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
+    }
+});
+}
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('task').addEventListener('click', taskDesc);
+});
+

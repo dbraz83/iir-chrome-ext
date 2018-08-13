@@ -46,6 +46,15 @@ p.c{
 	border: 5px solid black;
 	padding: 10px 100px 100px 50px;
 }
+
+.end{
+	background: #ffffff;
+    padding: 1em;
+	border: 5px solid black;
+	padding: 10px 100px 100px 50px;
+	text-align: center;
+	
+}
 .button1 {
     background-color: #008CBA;
     border: none;
@@ -111,4 +120,11 @@ input:required {
 
 input:required:invalid {
   border-color: #C00000;
+}
+
+.timer{
+	text-align:center;
+	font-size: 40px;
+	border: solid;
+    color: black;
 }
