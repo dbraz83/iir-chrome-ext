@@ -140,8 +140,8 @@ var latinSquare = [
         task3: "visa"
     }
 ]
-function hideShow(){
-var tasks = [];
+function hideShow() {
+    var tasks = [];
     chrome.storage.local.get('iir_tasks', function (result) {
         var existingTasks = result.iir_tasks;
         if (typeof existingTasks != 'undefined') {
@@ -149,30 +149,30 @@ var tasks = [];
         }
 
         nextTask = tasks.find(x => x.complete == false);
-        
+
         if (nextTask == null) {
-        document.getElementById("menu").style.visibility='visible';
-		document.getElementById("resume").style.visibility='hidden';
-		document.getElementById("end-task").style.visibility='hidden';
-		document.getElementById("task").style.visibility='hidden';
-	}
-	else {
-		document.getElementById("menu").style.visibility='hidden';
-		document.getElementById("resume").style.visibility='visible';
-		document.getElementById("end-task").style.visibility='visible';
-		document.getElementById("task").style.visibility='visible';
-		}
-	});
+            document.getElementById("menu").style.visibility = 'visible';
+            document.getElementById("resume").style.visibility = 'hidden';
+            document.getElementById("end-task").style.visibility = 'hidden';
+            document.getElementById("task").style.visibility = 'hidden';
+        }
+        else {
+            document.getElementById("menu").style.visibility = 'hidden';
+            document.getElementById("resume").style.visibility = 'visible';
+            document.getElementById("end-task").style.visibility = 'visible';
+            document.getElementById("task").style.visibility = 'visible';
+        }
+    });
 }
 //event listener for the main menu click
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('menu').addEventListener('click', showMenu);
-	
+
 });
 //open the main menu
 function showMenu() {
     chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") });
-	
+
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
 //open the main menu
 function showInst() {
     chrome.tabs.create({ url: chrome.runtime.getURL("instructions.html") });
-	
+
 };
 
 
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function goToPreTask() {
     chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
-	
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -505,9 +505,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-function endTask(){
+function endTask() {
     chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
-    
+
     //log the time task was stopped to the tasks storage
     var tasks = [];
     chrome.storage.local.get('iir_tasks', function (result) {
@@ -524,22 +524,22 @@ function endTask(){
 
         tasks.find(x => x.complete == false).taskEndTime = timeLeft;
 
-    //save the task
-    
-    var taskObj = {};
-    taskObj['iir_tasks'] = tasks;
-    chrome.storage.local.set(taskObj, function () {
+        //save the task
 
-        
-        
-        //remove the stored time to stop clock
-        chrome.storage.local.remove(["iir_timer"], function () {
-            var error = chrome.runtime.lastError;
-            if (error) {
-                console.error(error);
-            }
-        })
-    });
+        var taskObj = {};
+        taskObj['iir_tasks'] = tasks;
+        chrome.storage.local.set(taskObj, function () {
+
+
+
+            //remove the stored time to stop clock
+            chrome.storage.local.remove(["iir_timer"], function () {
+                var error = chrome.runtime.lastError;
+                if (error) {
+                    console.error(error);
+                }
+            })
+        });
     });
 };
 
@@ -555,43 +555,67 @@ $(function () {
             tasks = existingTasks;
         }
         var pageName = $('#page').val();
-        var thisTask = tasks.find(x => x.task == pageName);
 
-        if(thisTask != null && thisTask.preTaskComplete){      
-			$('#task-start').hide();
+        if (pageName == 'popup') {
+            var outstandingTask = tasks.find(x=>x.complete == false);
+            if(outstandingTask == null){
+                document.getElementById("menu").style.visibility='visible';
+                document.getElementById("resume").style.visibility='hidden';
+                document.getElementById("end-task").style.visibility='hidden';
+                document.getElementById("task").style.visibility='hidden';
+            }
+            else if(outstandingTask.preTaskComplete == false){
+                document.getElementById("menu").style.visibility='visible';
+                document.getElementById("resume").style.visibility='visible';
+                document.getElementById("end-task").style.visibility='hidden';
+                document.getElementById("task").style.visibility='visible';
+            }
+            else{
+                document.getElementById("menu").style.visibility='hidden';
+		document.getElementById("resume").style.visibility='visible';
+		document.getElementById("end-task").style.visibility='visible';
+		document.getElementById("task").style.visibility='visible';
+            }
+        }
+        else {
+            var thisTask = tasks.find(x => x.task == pageName);
+
+            if (thisTask != null && thisTask.preTaskComplete) {
+                $('#task-start').hide();
+            }
         }
     });
 });
 
 // to clear all local.storage arrays
 
-function clear(){
-chrome.storage.local.remove(["iir_urls","iir_form_pretasks","iir_tasks","iir_form_consent","iir_form_prestudy","iir_timer","iir_bookmarks","iir_form_posttasks","iir_searches","iir_clicks","iir_querytime"],function(){
- var error = chrome.runtime.lastError;
-    if (error) {
-        console.error(error);
-    }
-})
+function clear() {
+    chrome.storage.local.remove(["iir_urls", "iir_form_pretasks", "iir_tasks", "iir_form_consent", "iir_form_prestudy", "iir_timer", "iir_bookmarks", "iir_form_posttasks", "iir_searches", "iir_clicks", "iir_querytime"], function () {
+        var error = chrome.runtime.lastError;
+        if (error) {
+            console.error(error);
+        }
+    })
 }
 
 // finding the task description
-function taskDesc(){
-	var tasks = [];
-chrome.storage.local.get('iir_tasks', function (result) {
-    var existingTasks = result.iir_tasks;
-    if (typeof existingTasks != 'undefined') {
-        tasks = existingTasks;
-    }
-    nextTask = tasks.find(x => x.complete == false);
+function taskDesc() {
+    var tasks = [];
+    chrome.storage.local.get('iir_tasks', function (result) {
+        var existingTasks = result.iir_tasks;
+        if (typeof existingTasks != 'undefined') {
+            tasks = existingTasks;
+        }
+        nextTask = tasks.find(x => x.complete == false);
 
-    if (nextTask != null) {
-        var page = nextTask.task + '.html';
-        chrome.tabs.create({ url: chrome.runtime.getURL(page) });
-	}
-    else {
-        chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
-    }
-});
+        if (nextTask != null) {
+            var page = nextTask.task + '.html';
+            chrome.tabs.create({ url: chrome.runtime.getURL(page) });
+        }
+        else {
+            chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
+        }
+    });
 }
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('task').addEventListener('click', taskDesc);
