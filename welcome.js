@@ -474,6 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('resume').addEventListener('click', resumeStudy);
 });
 
+
 function endTask(){
     chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
     
@@ -491,21 +492,26 @@ function endTask(){
             var timeLeft = storedTime - currentTime;
         });
 
-        tasks.taskEndTime = timeLeft;
+        tasks.find(x => x.complete == false).taskEndTime = timeLeft;
 
     //save the task
-
     
+    var taskObj = {};
+    taskObj['iir_tasks'] = tasks;
+    chrome.storage.local.set(taskObj, function () {
 
-    //remove the stored time to stop clock
-    chrome.storage.local.remove(["iir_timer"], function () {
-        var error = chrome.runtime.lastError;
-        if (error) {
-            console.error(error);
-        }
-    })
-}
-)};
+        
+        
+        //remove the stored time to stop clock
+        chrome.storage.local.remove(["iir_timer"], function () {
+            var error = chrome.runtime.lastError;
+            if (error) {
+                console.error(error);
+            }
+        })
+    });
+    });
+};
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('end-task').addEventListener('click', endTask);
