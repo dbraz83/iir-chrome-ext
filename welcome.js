@@ -564,12 +564,6 @@ $(function () {
                 document.getElementById("end-task").style.visibility='hidden';
                 document.getElementById("task").style.visibility='hidden';
             }
-            else if(outstandingTask.preTaskComplete == false){
-                document.getElementById("menu").style.visibility='visible';
-                document.getElementById("resume").style.visibility='visible';
-                document.getElementById("end-task").style.visibility='hidden';
-                document.getElementById("task").style.visibility='visible';
-            }
             else{
                 document.getElementById("menu").style.visibility='hidden';
 		document.getElementById("resume").style.visibility='visible';
