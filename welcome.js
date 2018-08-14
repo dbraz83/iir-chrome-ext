@@ -520,17 +520,18 @@ function endTask() {
             var storedTime = result.iir_timer;
             var currentTime = new Date().getTime();
             var timeLeft = storedTime - currentTime;
+
+
+            tasks.find(x => x.complete == false).taskEndTime = timeLeft;
+
+            //save the task
+
+            var taskObj = {};
+            taskObj['iir_tasks'] = tasks;
+            chrome.storage.local.set(taskObj, function () {
+            });
         });
 
-        tasks.find(x => x.complete == false).taskEndTime = timeLeft;
-
-        //save the task
-
-        var taskObj = {};
-        taskObj['iir_tasks'] = tasks;
-        chrome.storage.local.set(taskObj, function () {
-        });
-        
     });
     //remove the stored time to stop clock
     chrome.storage.local.remove(["iir_timer"], function () {
@@ -555,18 +556,18 @@ $(function () {
         var pageName = $('#page').val();
 
         if (pageName == 'popup') {
-            var outstandingTask = tasks.find(x=>x.complete == false);
-            if(outstandingTask == null){
-                document.getElementById("menu").style.visibility='visible';
-                document.getElementById("resume").style.visibility='hidden';
-                document.getElementById("end-task").style.visibility='hidden';
-                document.getElementById("task").style.visibility='hidden';
+            var outstandingTask = tasks.find(x => x.complete == false);
+            if (outstandingTask == null) {
+                document.getElementById("menu").style.visibility = 'visible';
+                document.getElementById("resume").style.visibility = 'hidden';
+                document.getElementById("end-task").style.visibility = 'hidden';
+                document.getElementById("task").style.visibility = 'hidden';
             }
-            else{
-                document.getElementById("menu").style.visibility='hidden';
-		document.getElementById("resume").style.visibility='visible';
-		document.getElementById("end-task").style.visibility='visible';
-		document.getElementById("task").style.visibility='visible';
+            else {
+                document.getElementById("menu").style.visibility = 'hidden';
+                document.getElementById("resume").style.visibility = 'visible';
+                document.getElementById("end-task").style.visibility = 'visible';
+                document.getElementById("task").style.visibility = 'visible';
             }
         }
         else {
