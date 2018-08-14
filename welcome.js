@@ -521,11 +521,14 @@ function endTask() {
             var currentTime = new Date().getTime();
             var timeLeft = storedTime - currentTime;
 
-
-            tasks.find(x => x.complete == false).taskEndTime = timeLeft;
+            var thisTask = tasks.find(x => x.complete == false)
+            for (var i in tasks) {
+                if (tasks[i].task == thisTask.task) {
+                    tasks[i].taskEndTime = timeLeft;
+                }
+            }
 
             //save the task
-
             var taskObj = {};
             taskObj['iir_tasks'] = tasks;
             chrome.storage.local.set(taskObj, function () {
