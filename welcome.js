@@ -535,13 +535,14 @@ function endTask() {
             });
         });
 
-    });
-    //remove the stored time to stop clock
-    chrome.storage.local.remove(["iir_timer"], function () {
-        var error = chrome.runtime.lastError;
-        if (error) {
-            console.error(error);
-        }
+
+        //remove the stored time to stop clock
+        chrome.storage.local.remove(["iir_timer"], function () {
+            var error = chrome.runtime.lastError;
+            if (error) {
+                console.error(error);
+            }
+        });
     });
 };
 
