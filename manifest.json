@@ -1,8 +1,8 @@
 {
   "name": "IIR Chrome Extension",
-  "version": "0.2",
+  "version": "1.0",
   "manifest_version": 2,
-  "description": "Not just mucking about now, this thing is starting to resembling a chrome extension",
+  "description": "Chrome extension that tracks users interactions.",
   "background": {
     "scripts": [
       "jquery-1.11.1.js",
