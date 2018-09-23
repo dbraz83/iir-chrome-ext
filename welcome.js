@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function startStudy() {
     //before we store the form values we check if all were checked
     if (document.consent.consent1.checked == false || document.consent.consent2.checked == false || document.consent.sign.checked == false) {
-        alert('Please check your answers and ensure all are complete if you want to proceed');
+        alert('You cannot take this study without your consent.');
 
     }
     else {
@@ -244,8 +244,32 @@ document.addEventListener('DOMContentLoaded', function () {
 //start pre task
 function preStudy() {
     //before we store the form values we check if all were checked
-    if (document.preStudy.age.value == "" || document.getElementById("countries").value == "blank" || document.preStudy.Occupation.value == "" || document.preStudy.gender.checked == false || document.preStudy.language.checked == false || document.preStudy.it_use.checked == false || document.preStudy.se_use.checked == false || document.preStudy.se_pref.checked == false || document.preStudy.studyCode.value == "") {
-        alert('Please check your answers and ensure all are complete if you want to proceed');
+    if (document.preStudy.age.value == "") {
+        alert('Age is required');
+    }
+    else if (document.getElementById("countries").value == "blank") {
+        alert('Country is required');
+    }
+    else if (document.preStudy.Occupation.value == "") {
+        alert('Occupation is required');
+    }
+    else if (document.preStudy.gender.checked == false) {
+        alert('Gender is required');
+    }
+    else if (document.preStudy.language.checked == false) {
+        alert('Language is required');
+    }
+    else if (document.preStudy.it_use.checked == false) {
+        alert('IT use is required');
+    }
+    else if (document.preStudy.se_use.checked == false) {
+        alert('Search Engine use is required');
+    }
+    else if (document.preStudy.se_pref.checked == false) {
+        alert('Search Engine Preference is required');
+    }
+    else if (document.preStudy.studyCode.value == "") {
+        alert('Study Code is required');
     }
     else {
         var preStudyValues = {
@@ -372,7 +396,6 @@ function countdown()//remsec in second
                         int: $("input[name='int']:checked").val(),
                         diff: $("input[name='diff']:checked").val(),
                     }
-
                     preTasks.push(preTaskValues);
 
                     var preTaskObj = {};
@@ -394,6 +417,7 @@ function countdown()//remsec in second
             });
         });
     });
+
 }
 
 function PostTask() {
@@ -436,7 +460,6 @@ function postStudy() {
                     q12: $("input[name='q12']:checked").val(),
                     q13: $("input[name='q13']:checked").val()
                 }
-
                 postTasks.push(postTaskValues);
 
                 var postTaskObj = {};
@@ -454,13 +477,20 @@ function postStudy() {
                     chrome.storage.local.set(taskObj, function () {
                         nextTask = tasks.find(x => x.complete == false);
 
-                        if (nextTask != null) {
-                            var page = nextTask.task + '.html';
-                            chrome.tabs.update({ url: chrome.runtime.getURL(page) });
-                        }
-                        else {
-                            chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
-                        }
+                        chrome.tabs.query({}, function (tabs) {
+                            for (var i = 0; i < tabs.length; i++) {
+                                if (tabs[i].url !== chrome.runtime.getURL("postTask.html"))
+                                    chrome.tabs.remove(tabs[i].id);
+                            }
+
+                            if (nextTask != null) {
+                                var page = nextTask.task + '.html';
+                                chrome.tabs.update({ url: chrome.runtime.getURL(page) });
+                            }
+                            else {
+                                chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
+                            }
+                        });
                     });
                 });
             });
