@@ -362,62 +362,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function countdown()//remsec in second
 {
-    var newURL = "https://www.google.co.uk/";
-    chrome.tabs.update({ url: newURL });
+    if ($("input[name='exp']:checked").val() == null) {
+        alert('Experience is required');
+    }
+    else if ($("input[name='know']:checked").val() == null) {
+        alert('Knowledge is required');
+    }
+    else if ($("input[name='int']:checked").val() == null) {
+        alert('Interest is required');
+    }
+    else if ($("input[name='diff']:checked").val() == null) {
+        alert('Difficulty is required');
+    }
+    else {
+        var newURL = "https://www.google.co.uk/";
+        chrome.tabs.update({ url: newURL });
 
-    var endTime = new Date().getTime() + 600000
+        var endTime = new Date().getTime() + 600000
 
-    var obj = {};
-    obj['iir_timer'] = endTime
-    chrome.storage.local.set(obj, function () {
-        chrome.storage.local.get('iir_timer', function (result) {
-            console.log(result);
+        var obj = {};
+        obj['iir_timer'] = endTime
+        chrome.storage.local.set(obj, function () {
+            chrome.storage.local.get('iir_timer', function (result) {
+                console.log(result);
 
-            var tasks = [];
-            chrome.storage.local.get('iir_tasks', function (result) {
-                var existingTasks = result.iir_tasks;
-                if (typeof existingTasks != 'undefined') {
-                    tasks = existingTasks;
-                }
-
-                var nextTask = tasks.find(x => x.complete == false);
-
-                var preTasks = []
-                chrome.storage.local.get('iir_form_pretasks', function (result) {
-                    var existingPreTasks = result.iir_form_pretasks;
-                    if (typeof existingPreTasks != 'undefined') {
-                        preTasks = existingPreTasks;
+                var tasks = [];
+                chrome.storage.local.get('iir_tasks', function (result) {
+                    var existingTasks = result.iir_tasks;
+                    if (typeof existingTasks != 'undefined') {
+                        tasks = existingTasks;
                     }
 
-                    var preTaskValues = {
-                        task: nextTask.task,
-                        exp: $("input[name='exp']:checked").val(),
-                        know: $("input[name='know']:checked").val(),
-                        int: $("input[name='int']:checked").val(),
-                        diff: $("input[name='diff']:checked").val(),
-                    }
-                    preTasks.push(preTaskValues);
+                    var nextTask = tasks.find(x => x.complete == false);
 
-                    var preTaskObj = {};
-                    preTaskObj['iir_form_pretasks'] = preTasks
-                    chrome.storage.local.set(preTaskObj, function () {
-                        for (var i in tasks) {
-                            if (tasks[i].task == nextTask.task) {
-                                tasks[i].preTaskComplete = true;
-                            }
+                    var preTasks = []
+                    chrome.storage.local.get('iir_form_pretasks', function (result) {
+                        var existingPreTasks = result.iir_form_pretasks;
+                        if (typeof existingPreTasks != 'undefined') {
+                            preTasks = existingPreTasks;
                         }
 
-                        var taskObj = {};
-                        taskObj['iir_tasks'] = tasks
-                        chrome.storage.local.set(taskObj, function () {
-                            chrome.tabs.update({ url: "https://google.co.uk" });
+                        var preTaskValues = {
+                            task: nextTask.task,
+                            exp: $("input[name='exp']:checked").val(),
+                            know: $("input[name='know']:checked").val(),
+                            int: $("input[name='int']:checked").val(),
+                            diff: $("input[name='diff']:checked").val(),
+                        }
+                        preTasks.push(preTaskValues);
+
+                        var preTaskObj = {};
+                        preTaskObj['iir_form_pretasks'] = preTasks
+                        chrome.storage.local.set(preTaskObj, function () {
+                            for (var i in tasks) {
+                                if (tasks[i].task == nextTask.task) {
+                                    tasks[i].preTaskComplete = true;
+                                }
+                            }
+
+                            var taskObj = {};
+                            taskObj['iir_tasks'] = tasks
+                            chrome.storage.local.set(taskObj, function () {
+                                chrome.tabs.update({ url: "https://google.co.uk" });
+                            });
                         });
                     });
                 });
             });
         });
-    });
-
+    }
 }
 
 function PostTask() {
@@ -428,73 +441,115 @@ function PostTask() {
 
 function postStudy() {
     {
-        var tasks = [];
-        chrome.storage.local.get('iir_tasks', function (result) {
-            var existingTasks = result.iir_tasks;
-            if (typeof existingTasks != 'undefined') {
-                tasks = existingTasks;
-            }
+        if ($("input[name='q1']:checked").val() == null) {
+            alert('Q1 is required');
+        }
+        else if ($("input[name='q2']:checked").val() == null) {
+            alert('Q2 is required');
+        }
+        else if ($("input[name='q3']:checked").val() == null) {
+            alert('Q3 is required');
+        }
+        else if ($("input[name='q4']:checked").val() == null) {
+            alert('Q4 is required');
+        }
+        else if ($("input[name='q5']:checked").val() == null) {
+            alert('Q5 is required');
+        }
+        else if ($("input[name='q6']:checked").val() == null) {
+            alert('Q6 is required');
+        }
+        else if ($("input[name='q7']:checked").val() == null) {
+            alert('Q7 is required');
+        }
+        else if ($("input[name='q8']:checked").val() == null) {
+            alert('Q9 is required');
+        }
+        else if ($("input[name='q9']:checked").val() == null) {
+            alert('Q9 is required');
+        }
+        else if ($("input[name='q10']:checked").val() == null) {
+            alert('Q10 is required');
+        }
+        else if ($("input[name='q11']:checked").val() == null) {
+            alert('Q11 is required');
+        }
+        else if ($("input[name='q12']:checked").val() == null) {
+            alert('Q12 is required');
+        }
+        else if ($("input[name='q13']:checked").val() == null) {
+            alert('Q13 is required');
+        }
+        else {
 
-            var nextTask = tasks.find(x => x.complete == false);
-
-            var postTasks = [];
-            chrome.storage.local.get('iir_form_posttasks', function (result) {
-                var existingPostTasks = result.iir_form_posttasks;
-                if (typeof existingPostTasks != 'undefined') {
-                    postTasks = existingPostTasks;
+            var tasks = [];
+            chrome.storage.local.get('iir_tasks', function (result) {
+                var existingTasks = result.iir_tasks;
+                if (typeof existingTasks != 'undefined') {
+                    tasks = existingTasks;
                 }
 
-                var postTaskValues = {
-                    task: nextTask.task,
-                    q1: $("input[name='q1']:checked").val(),
-                    q2: $("input[name='q2']:checked").val(),
-                    q3: $("input[name='q3']:checked").val(),
-                    q4: $("input[name='q4']:checked").val(),
-                    q5: $("input[name='q5']:checked").val(),
-                    q6: $("input[name='q6']:checked").val(),
-                    q7: $("input[name='q7']:checked").val(),
-                    q8: $("input[name='q8']:checked").val(),
-                    q9: $("input[name='q9']:checked").val(),
-                    q10: $("input[name='q10']:checked").val(),
-                    q11: $("input[name='q11']:checked").val(),
-                    q12: $("input[name='q12']:checked").val(),
-                    q13: $("input[name='q13']:checked").val()
-                }
-                postTasks.push(postTaskValues);
+                var nextTask = tasks.find(x => x.complete == false);
 
-                var postTaskObj = {};
-                postTaskObj['iir_form_posttasks'] = postTasks
-                chrome.storage.local.set(postTaskObj, function () {
-                    for (var i in tasks) {
-                        if (tasks[i].task == nextTask.task) {
-                            tasks[i].complete = true;
-                            tasks[i].postTaskComplete = true;
-                        }
+                var postTasks = [];
+                chrome.storage.local.get('iir_form_posttasks', function (result) {
+                    var existingPostTasks = result.iir_form_posttasks;
+                    if (typeof existingPostTasks != 'undefined') {
+                        postTasks = existingPostTasks;
                     }
 
-                    var taskObj = {};
-                    taskObj['iir_tasks'] = tasks
-                    chrome.storage.local.set(taskObj, function () {
-                        nextTask = tasks.find(x => x.complete == false);
+                    var postTaskValues = {
+                        task: nextTask.task,
+                        q1: $("input[name='q1']:checked").val(),
+                        q2: $("input[name='q2']:checked").val(),
+                        q3: $("input[name='q3']:checked").val(),
+                        q4: $("input[name='q4']:checked").val(),
+                        q5: $("input[name='q5']:checked").val(),
+                        q6: $("input[name='q6']:checked").val(),
+                        q7: $("input[name='q7']:checked").val(),
+                        q8: $("input[name='q8']:checked").val(),
+                        q9: $("input[name='q9']:checked").val(),
+                        q10: $("input[name='q10']:checked").val(),
+                        q11: $("input[name='q11']:checked").val(),
+                        q12: $("input[name='q12']:checked").val(),
+                        q13: $("input[name='q13']:checked").val()
+                    }
+                    postTasks.push(postTaskValues);
 
-                        chrome.tabs.query({}, function (tabs) {
-                            for (var i = 0; i < tabs.length; i++) {
-                                if (tabs[i].url !== chrome.runtime.getURL("postTask.html"))
-                                    chrome.tabs.remove(tabs[i].id);
+                    var postTaskObj = {};
+                    postTaskObj['iir_form_posttasks'] = postTasks
+                    chrome.storage.local.set(postTaskObj, function () {
+                        for (var i in tasks) {
+                            if (tasks[i].task == nextTask.task) {
+                                tasks[i].complete = true;
+                                tasks[i].postTaskComplete = true;
                             }
+                        }
 
-                            if (nextTask != null) {
-                                var page = nextTask.task + '.html';
-                                chrome.tabs.update({ url: chrome.runtime.getURL(page) });
-                            }
-                            else {
-                                chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
-                            }
+                        var taskObj = {};
+                        taskObj['iir_tasks'] = tasks
+                        chrome.storage.local.set(taskObj, function () {
+                            nextTask = tasks.find(x => x.complete == false);
+
+                            chrome.tabs.query({}, function (tabs) {
+                                for (var i = 0; i < tabs.length; i++) {
+                                    if (tabs[i].url !== chrome.runtime.getURL("postTask.html"))
+                                        chrome.tabs.remove(tabs[i].id);
+                                }
+
+                                if (nextTask != null) {
+                                    var page = nextTask.task + '.html';
+                                    chrome.tabs.update({ url: chrome.runtime.getURL(page) });
+                                }
+                                else {
+                                    chrome.tabs.update({ url: chrome.runtime.getURL("endStudy.html") });
+                                }
+                            });
                         });
                     });
                 });
             });
-        });
+        }
     }
 }
 
