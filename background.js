@@ -57,14 +57,31 @@ function logCurrentUrl(seconds) {
                     var timeLeft = storedTime - currentTime;
 
                     if (storedTime != 'undefined') {
-                        if (timeLeft <= 0) {
-                            chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
-                            chrome.storage.local.remove(["iir_timer"], function () {
-                                var error = chrome.runtime.lastError;
-                                if (error) {
-                                    console.error(error);
+
+                        if (nextTask.preTaskComplete == false) {
+                            var open = false;
+                            chrome.tabs.query({}, function (tabs) {
+                                for (var i = 0; i < tabs.length; i++) {
+                                    if (tabs[i].url === chrome.runtime.getURL("preTask.html")){
+                                        open = true;
+                                    }
                                 }
-                            })
+
+                                if(open == false){
+                                    chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+                                }                            
+                            });
+                        }
+                        else {
+                            if (timeLeft <= 0) {
+                                chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+                                chrome.storage.local.remove(["iir_timer"], function () {
+                                    var error = chrome.runtime.lastError;
+                                    if (error) {
+                                        console.error(error);
+                                    }
+                                })
+                            }
                         }
 
                         var views = chrome.extension.getViews({
@@ -80,7 +97,6 @@ function logCurrentUrl(seconds) {
                         }
                         else {
                             views[i].document.getElementById('x').innerHTML = "00:00";
-
                         }
                     }
                 });

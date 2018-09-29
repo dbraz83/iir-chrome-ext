@@ -688,6 +688,7 @@ function taskDesc() {
         if (typeof existingTasks != 'undefined') {
             tasks = existingTasks;
         }
+        
         nextTask = tasks.find(x => x.complete == false);
 
         if (nextTask != null) {
