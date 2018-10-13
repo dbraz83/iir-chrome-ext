@@ -33,6 +33,7 @@ function logCurrentUrl(seconds) {
                     chrome.tabs.query({}, function (tabs) {
                         tabs.forEach(tab => {
                             var item = {
+                                task: nextTask.task,
                                 url: tab.url,
                                 timeStamp: new Date().getTime(),
                                 active: tab.active
@@ -318,7 +319,7 @@ function download() {
                                                         }
 
                                                         csvContent += "--Search Data--" + "\r\n";
-                                                        csvContent += "Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
+                                                        csvContent += "Task,Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
                                                         if (finalSearches != null) {
                                                             finalSearches.forEach(function (item) {
 
@@ -331,7 +332,7 @@ function download() {
                                                                 item.text = item.text.replace(/,/g, "");
                                                                 item.searchText = item.searchText.replace(/,/g, "");
 
-                                                                var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
+                                                                var row = item.task + ',' + item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
@@ -372,10 +373,10 @@ function download() {
                                                         }
 
                                                         csvContent += "--Url Data--" + "\r\n";
-                                                        csvContent += "Url,TimeStamp,Active" + "\r\n";
+                                                        csvContent += "Task,Url,TimeStamp,Active" + "\r\n";
                                                         if (finalUrls != null) {
                                                             finalUrls.forEach(function (item) {
-                                                                var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
+                                                                var row = item.task + ',' + item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
