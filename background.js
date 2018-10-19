@@ -63,7 +63,9 @@ function logCurrentUrl(seconds) {
                             var open = false;
                             chrome.tabs.query({}, function (tabs) {
                                 for (var i = 0; i < tabs.length; i++) {
-                                    if (tabs[i].url === chrome.runtime.getURL("preTask.html")){
+                                    if (tabs[i].url === chrome.runtime.getURL("preTask.html") || tabs[i].url === chrome.runtime.getURL("dbd.html")
+                                    || tabs[i].url === chrome.runtime.getURL("health.html") || tabs[i].url === chrome.runtime.getURL("housing.html")
+                                    || tabs[i].url === chrome.runtime.getURL("visa.html")){
                                         open = true;
                                     }
                                 }
