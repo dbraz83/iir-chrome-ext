@@ -391,6 +391,11 @@ function millisecondsToTime(milli) {
     var seconds = Math.floor((milli / 1000) % 60);
     var minutes = Math.floor((milli / (60 * 1000)) % 60);
 
+    if (seconds < 10)
+    {
+        seconds = "0" + seconds;
+    }
+
     return minutes + ":" + seconds;
 }
 
