@@ -332,7 +332,8 @@ function download() {
                                                                 item.text = item.text.replace(/,/g, "");
                                                                 item.searchText = item.searchText.replace(/,/g, "");
 
-                                                                var row = item.task + ',' + item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
+                                                                var row = item.task + ',' + 
+                                                                item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
@@ -352,13 +353,13 @@ function download() {
                                                         }
 
                                                         csvContent += "--Search Time Data--" + "\r\n";
-                                                        csvContent += "Search Text,Start,End" + "\r\n";
+                                                        csvContent += "Task,Search Text,Start,End" + "\r\n";
                                                         if (finalQueryTimes != null) {
                                                             finalQueryTimes.forEach(function (item) {
                                                                 if (item.queryText != null) {
                                                                     item.queryText = item.queryText.replace(/,/g, "");
                                                                 }
-                                                                var row = item.queryText + ',' + item.start + ',' + item.end + "\r\n";
+                                                                var row = item.task + ',' + item.queryText + ',' + item.start + ',' + item.end + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
