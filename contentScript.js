@@ -21,55 +21,69 @@ $(document).ready(function () {
 
 function createArray(includeAdverts) {
     //Save array in local storage using search criteria as part of key. 
-    //If local storage for search already exists add links to existing array        
-    chrome.storage.local.get('iir_searches', function (result) {
-        var existingSearchResults = result.iir_searches;
-        if (typeof existingSearchResults != 'undefined') {
-            searchResults = existingSearchResults;
+    //If local storage for search already exists add links to existing array   
+    var tasks = [];
+    chrome.storage.local.get('iir_tasks', function (result) {
+        var existingTasks = result.iir_tasks;
+        if (typeof existingTasks != 'undefined') {
+            tasks = existingTasks;
         }
 
-        var rank = 1;
-        var page = $("#nav").find(".cur").text();
-        var timeStamp = new Date().getTime();
+        var currentTask = 'Unknown';
+        var nextTask = tasks.find(x => x.complete == false);
+        if (nextTask != null) {
+            currentTask = nextTask.task;
+        }
 
-        //if we're including advert links then loop through all adverts and add to array if not already present.
-        if (includeAdverts) {
-            $(".ad_cclk").each(function () {
-                var link;
-                var text;
+        chrome.storage.local.get('iir_searches', function (result) {
+            var existingSearchResults = result.iir_searches;
+            if (typeof existingSearchResults != 'undefined') {
+                searchResults = existingSearchResults;
+            }
 
-                $(this).find("h3").find("a").each(function () {
+            var rank = 1;
+            var page = $("#nav").find(".cur").text();
+            var timeStamp = new Date().getTime();
 
-                    if ($(this).text() != '') {
-                        link = $(this).attr('href');
-                        text = $(this).text();
+            //if we're including advert links then loop through all adverts and add to array if not already present.
+            if (includeAdverts) {
+                $(".ad_cclk").each(function () {
+                    var link;
+                    var text;
+
+                    $(this).find("h3").find("a").each(function () {
+
+                        if ($(this).text() != '') {
+                            link = $(this).attr('href');
+                            text = $(this).text();
+                        }
+                    });
+
+                    if (link != null && text != null && !isInArray(searchResults, link)) {
+                        addToSearchArray(currentTask, searchText, link, text, page, rank, true, timeStamp);
+                        rank++;
                     }
                 });
+            }
+
+            //Loop through every link in page and add to array if not already present.
+            $(".g").each(function () {
+                var link = $(this).find("h3.r").find("a").attr('href');
+                var text = $(this).find("h3.r").find("a").text();
 
                 if (link != null && text != null && !isInArray(searchResults, link)) {
-                    addToSearchArray(searchText, link, text, page, rank, true, timeStamp);
+                    addToSearchArray(searchText, link, text, page, rank, false, timeStamp);
                     rank++;
                 }
             });
-        }
 
-        //Loop through every link in page and add to array if not already present.
-        $(".g").each(function () {
-            var link = $(this).find("h3.r").find("a").attr('href');
-            var text = $(this).find("h3.r").find("a").text();
-
-            if (link != null && text != null && !isInArray(searchResults, link)) {
-                addToSearchArray(searchText, link, text, page, rank, false, timeStamp);
-                rank++;
-            }
-        });
-
-        var obj = {};
-        obj['iir_searches'] = searchResults
-        chrome.storage.local.set(obj, function () {
-            //Call array from local storage and display in console for reference.
-            chrome.storage.local.get('iir_searches', function (result) {
-                console.log(result);
+            var obj = {};
+            obj['iir_searches'] = searchResults
+            chrome.storage.local.set(obj, function () {
+                //Call array from local storage and display in console for reference.
+                chrome.storage.local.get('iir_searches', function (result) {
+                    console.log(result);
+                });
             });
         });
     });
@@ -84,8 +98,9 @@ function isInArray(array, link) {
     return false;
 }
 
-function addToSearchArray(searchText, link, text, page, rank, advert, timeStamp) {
+function addToSearchArray(task, searchText, link, text, page, rank, advert, timeStamp) {
     var item = {
+        task: task,
         searchText: searchText,
         link: link,
         text: text,

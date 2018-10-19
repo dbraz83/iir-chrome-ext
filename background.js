@@ -33,6 +33,7 @@ function logCurrentUrl(seconds) {
                     chrome.tabs.query({}, function (tabs) {
                         tabs.forEach(tab => {
                             var item = {
+                                task: nextTask.task,
                                 url: tab.url,
                                 timeStamp: new Date().getTime(),
                                 active: tab.active
@@ -57,14 +58,33 @@ function logCurrentUrl(seconds) {
                     var timeLeft = storedTime - currentTime;
 
                     if (storedTime != 'undefined') {
-                        if (timeLeft <= 0) {
-                            chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
-                            chrome.storage.local.remove(["iir_timer"], function () {
-                                var error = chrome.runtime.lastError;
-                                if (error) {
-                                    console.error(error);
+
+                        if (nextTask.preTaskComplete == false) {
+                            var open = false;
+                            chrome.tabs.query({}, function (tabs) {
+                                for (var i = 0; i < tabs.length; i++) {
+                                    if (tabs[i].url === chrome.runtime.getURL("preTask.html") || tabs[i].url === chrome.runtime.getURL("dbd.html")
+                                    || tabs[i].url === chrome.runtime.getURL("health.html") || tabs[i].url === chrome.runtime.getURL("housing.html")
+                                    || tabs[i].url === chrome.runtime.getURL("visa.html")){
+                                        open = true;
+                                    }
                                 }
-                            })
+
+                                if(open == false){
+                                    chrome.tabs.update({ url: chrome.runtime.getURL("preTask.html") });
+                                }                            
+                            });
+                        }
+                        else {
+                            if (timeLeft <= 0) {
+                                chrome.tabs.update({ url: chrome.runtime.getURL("postTask.html") });
+                                chrome.storage.local.remove(["iir_timer"], function () {
+                                    var error = chrome.runtime.lastError;
+                                    if (error) {
+                                        console.error(error);
+                                    }
+                                })
+                            }
                         }
 
                         var views = chrome.extension.getViews({
@@ -80,7 +100,6 @@ function logCurrentUrl(seconds) {
                         }
                         else {
                             views[i].document.getElementById('x').innerHTML = "00:00";
-
                         }
                     }
                 });
@@ -302,7 +321,7 @@ function download() {
                                                         }
 
                                                         csvContent += "--Search Data--" + "\r\n";
-                                                        csvContent += "Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
+                                                        csvContent += "Task,Search Text,Link,Text,Page,Rank,Advert,TimeStamp,Query Time" + "\r\n";
                                                         if (finalSearches != null) {
                                                             finalSearches.forEach(function (item) {
 
@@ -315,7 +334,8 @@ function download() {
                                                                 item.text = item.text.replace(/,/g, "");
                                                                 item.searchText = item.searchText.replace(/,/g, "");
 
-                                                                var row = item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
+                                                                var row = item.task + ',' + 
+                                                                item.searchText + ',' + item.link + ',' + item.text + ',' + item.page + ',' + item.rank + ',' + item.advert + ',' + item.timeStamp + ',' + queryTime + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
@@ -335,13 +355,13 @@ function download() {
                                                         }
 
                                                         csvContent += "--Search Time Data--" + "\r\n";
-                                                        csvContent += "Search Text,Start,End" + "\r\n";
+                                                        csvContent += "Task,Search Text,Start,End" + "\r\n";
                                                         if (finalQueryTimes != null) {
                                                             finalQueryTimes.forEach(function (item) {
                                                                 if (item.queryText != null) {
                                                                     item.queryText = item.queryText.replace(/,/g, "");
                                                                 }
-                                                                var row = item.queryText + ',' + item.start + ',' + item.end + "\r\n";
+                                                                var row = item.task + ',' + item.queryText + ',' + item.start + ',' + item.end + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
@@ -356,10 +376,10 @@ function download() {
                                                         }
 
                                                         csvContent += "--Url Data--" + "\r\n";
-                                                        csvContent += "Url,TimeStamp,Active" + "\r\n";
+                                                        csvContent += "Task,Url,TimeStamp,Active" + "\r\n";
                                                         if (finalUrls != null) {
                                                             finalUrls.forEach(function (item) {
-                                                                var row = item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
+                                                                var row = item.task + ',' + item.url + ',' + item.timeStamp + ',' + item.active + "\r\n";
                                                                 csvContent += row;
                                                             });
                                                         }
