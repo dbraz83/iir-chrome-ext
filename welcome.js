@@ -265,6 +265,15 @@ function preStudy() {
     else if (document.preStudy.se_use.checked == false) {
         alert('Search Engine use is required');
     }
+	else if (document.preStudy.conf.checked == false) {
+        alert('Search Experience use is required');
+    }
+	else if (document.preStudy.conf2.checked == false) {
+        alert('Search Experience use is required');
+    }
+	else if (document.preStudy.conf3.checked == false) {
+        alert('SSearch Experience use is required');
+    }
     else if (document.preStudy.se_pref.checked == false) {
         alert('Search Engine Preference is required');
     }
@@ -283,6 +292,9 @@ function preStudy() {
             itUse: $("input[name='it_use']:checked").val(),
             internetUse: $("input[name='inet_use']:checked").val(),
             searchEngineUse: $("input[name='se_use']:checked").val(),
+			query: $("input[name='conf']:checked").val(),
+			result: $("input[name='conf2']:checked").val(),
+			infoWeb: $("input[name='conf3']:checked").val(),
             searchEnginePreference: $("input[name='se_pref']:checked").val(),
             searchEngineText: $('#SE_text').val(),
             emailUpdate: $("input[name='update']:checked").val(),
