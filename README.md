@@ -1,2 +1,2 @@
 # iir-chrome-ext
-User interaction chrome extension
+User interaction Chrome extension
